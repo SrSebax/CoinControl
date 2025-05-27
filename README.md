@@ -23,5 +23,5 @@
 ---
 ## 👥 Equipo
 
-- 👨‍💻 **Desarrollador:** [Sebastian Londoño](#)
-- 🎨 **Diseñadora:** [Ana Naranjo](#)
+- 👨‍💻 **Desarrollador:** [Sebastian Londoño](https://www.instagram.com/sebax_lond/)
+- 🎨 **Diseñadora:** [Ana Naranjo](https://www.instagram.com/bwibichito/)
