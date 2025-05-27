@@ -9,7 +9,12 @@ import {
   User,
 } from "lucide-react";
 
-export default function Navbar({ collapsed, toggleSidebar, mobileOpen, toggleMobile }) {
+export default function Navbar({
+  collapsed,
+  toggleSidebar,
+  mobileOpen,
+  toggleMobile,
+}) {
   return (
     <header className="bg-white border-b border-gray-200 shadow flex items-center justify-between px-4 py-3 md:px-6">
       <div className="flex items-center">
@@ -49,9 +54,14 @@ export default function Navbar({ collapsed, toggleSidebar, mobileOpen, toggleMob
 
         {/* Perfil de usuario */}
         <div className="relative">
-          <button className="flex items-center space-x-2 focus:outline-none">
+          <button
+            className="flex items-center gap-2 px-2 py-1 rounded-full hover:bg-gray-100 transition"
+            aria-label="Perfil de usuario"
+          >
             <User size={20} className="text-gray-600" />
-            <span className="hidden sm:inline text-sm text-gray-700">Mi Cuenta</span>
+            <span className="hidden sm:inline text-sm text-gray-700">
+              Mi cuenta
+            </span>
           </button>
         </div>
       </div>
