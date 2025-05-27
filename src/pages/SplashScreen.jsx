@@ -9,7 +9,7 @@ export default function SplashScreen() {
         alt="CoinControl"
         className="h-28 w-auto animate-soft-bounce drop-shadow-xl"
       />
-      <p className="mt-6 text-sm text-white animate-fade-slide-up tracking-wide">
+      <p className="mt-6 text-md text-text-secondary font-bold animate-fade-slide-up tracking-wide">
         Cargando tu espacio financiero...
       </p>
     </div>

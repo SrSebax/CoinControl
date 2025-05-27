@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { X, LogOut } from "lucide-react";
 import logoFull from "../assets/coin-control-light.svg";
 import logoCollapsed from "../assets/pig-coin-control.svg";
-import { navItems } from "../routes/NavRoutes";
+import { itemsRoutes } from "../routes/itemsRoutes";
 
 export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
   const { pathname } = useLocation();
@@ -40,7 +40,7 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
 
         {/* Navegación */}
         <nav className="flex flex-col gap-1 px-2 flex-1 overflow-y-auto">
-          {navItems.map(({ path, label, icon }) => (
+          {itemsRoutes.map(({ path, label, icon }) => (
             <Link
               key={path}
               to={path}

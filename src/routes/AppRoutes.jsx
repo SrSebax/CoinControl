@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
-import Summary from "../pages/Summary";
 import NotFound from "../pages/NotFound";
-import SplashScreen from "../components/SplashScreen";
+import SplashScreen from "../pages/SplashScreen";
+import NewEntry from "../pages/NewEntry";
 
 const AppRoutes = () => {
   const [loading, setLoading] = useState(true);
@@ -18,7 +18,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/summary" element={<Summary />} />
+      <Route path="/new-entry" element={<NewEntry />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
