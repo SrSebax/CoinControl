@@ -4,7 +4,7 @@ import TabsSwitcher from "../components/TabsSwitcher";
 import TabPanelContent from "../components/TabPanelContent";
 import TableSummary from "../components/TableSummary";
 
-export default function Home() {
+export default function HomeView() {
   const [activeTab, setActiveTab] = useState("gastos");
 
   const ingresosQuincenales = 1090000;

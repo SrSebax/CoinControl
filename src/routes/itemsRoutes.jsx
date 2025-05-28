@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 export const itemsRoutes = [
-  { path: "/", label: "Inicio", icon: <LayoutDashboard size={20} /> },
+  { path: "/home", label: "Inicio", icon: <LayoutDashboard size={20} /> },
   { path: "/summary", label: "Resumen", icon: <PieChart size={20} /> },
   { path: "/payments", label: "Pagos", icon: <CreditCard size={20} /> },
   { path: "/charts", label: "Gráficos", icon: <BarChart3 size={20} /> },

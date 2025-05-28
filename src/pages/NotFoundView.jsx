@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
 
-export default function NotFound() {
+export default function NotFoundView() {
   return (
     <div className="relative h-screen bg-[var(--color-background)] flex items-center justify-center p-4 overflow-hidden">
       {/* Decorative circles */}
@@ -19,7 +19,7 @@ export default function NotFound() {
 
         <div className="flex justify-center gap-4">
           <Link
-            to="/"
+            to="/home"
             className="px-6 py-3 bg-[var(--color-primary)] text-[var(--color-text-button)] font-semibold rounded-full transition duration-300 transform hover:scale-110 hover:shadow-xl hover:bg-gradient-to-r hover:from-[var(--color-primary)] hover:to-[var(--color-success)] focus:outline-none focus:ring-4 focus:ring-[var(--color-primary)]"
           >
             Inicio

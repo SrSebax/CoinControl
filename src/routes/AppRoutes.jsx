@@ -1,27 +1,65 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
-import Home from "../pages/Home";
-import NotFound from "../pages/NotFound";
-import SplashScreen from "../pages/SplashScreen";
-import NewEntry from "../pages/NewEntry";
+import React, { useEffect, useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../services/firebase";
 
-const AppRoutes = () => {
+import SplashView from "../pages/SplashView";
+import HomeView from "../pages/HomeView";
+import NewEntryView from "../pages/NewEntryView";
+import NotFoundView from "../pages/NotFoundView";
+import LoginView from "../pages/LoginView";
+
+export default function AppRoutes() {
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 3000);
-    return () => clearTimeout(timer);
+    let resolvedAuth = false;
+    let resolvedTimeout = false;
+
+    const finishLoading = () => {
+      if (resolvedAuth && resolvedTimeout) setLoading(false);
+    };
+
+    const timeout = setTimeout(() => {
+      resolvedTimeout = true;
+      finishLoading();
+    }, 4000); // mínimo 3 segundos
+
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      resolvedAuth = true;
+      finishLoading();
+    });
+
+    return () => {
+      clearTimeout(timeout);
+      unsubscribe();
+    };
   }, []);
 
-  if (loading) return <SplashScreen />;
+  if (loading) return <SplashView />;
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/new-entry" element={<NewEntry />} />
-      <Route path="*" element={<NotFound />} />
+      {/* Rutas protegidas */}
+      <Route
+        path="/home"
+        element={user ? <HomeView /> : <Navigate to="/" replace />}
+      />
+      <Route
+        path="/new-entry"
+        element={user ? <NewEntryView /> : <Navigate to="/" replace />}
+      />
+
+      {/* Login pública */}
+      <Route
+        path="/"
+        element={user ? <Navigate to="/home" replace /> : <LoginView />}
+      />
+
+      {/* Ruta 404 */}
+      <Route path="*" element={<NotFoundView />} />
     </Routes>
   );
-};
-
-export default AppRoutes;
+}

@@ -18,3 +18,16 @@
   --color-text-button: #e5e7eb;
   --color-icon: #737D8E;
 }
+
+@keyframes loadingBarGlow {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.loading-bar-glow {
+  animation: loadingBarGlow 1.5s ease-in-out infinite;
+}

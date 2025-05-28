@@ -1,7 +1,7 @@
 import EntryForm from "../components/EntryForm/EntryForm";
 import Layout from "../components/Layout";
 
-export default function NewEntry() {
+export default function NewEntryView() {
   return (
     <Layout>
       <div className="px-2 py-2">
