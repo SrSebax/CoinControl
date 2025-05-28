@@ -7,7 +7,7 @@ export default function SplashScreen() {
       <img
         src={logo}
         alt="CoinControl"
-        className="h-28 w-auto animate-soft-bounce drop-shadow-xl"
+        className="h-28 w-auto animate-soft-bounce drop-shadow-xl p-2"
       />
       <p className="mt-6 text-md text-text-secondary font-bold animate-fade-slide-up tracking-wide">
         Cargando tu espacio financiero...

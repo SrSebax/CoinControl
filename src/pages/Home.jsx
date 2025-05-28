@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <div>
+      <div className="px-2 py-2">
         <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-8">
           Bienvenido a CoinControl
         </h2>
