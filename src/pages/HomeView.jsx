@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import TabsSwitcher from "../components/TabsSwitcher";
 import TabPanelContent from "../components/TabPanelContent";
 import TableSummary from "../components/TableSummary";
+import PageHeading from "../components/PageHeading";
 
 export default function HomeView() {
   const [activeTab, setActiveTab] = useState("gastos");
@@ -12,12 +13,12 @@ export default function HomeView() {
 
   return (
     <Layout>
-      <div className="px-2 py-2">
-        <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-8">
-          Bienvenido a CoinControl
-        </h2>
+      <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 space-y-6">
+        <div className="text-center sm:text-left">
+          <PageHeading title="Bienvenido a CoinControl" />
+          <TabsSwitcher activeTab={activeTab} setActiveTab={setActiveTab} />
+        </div>
 
-        <TabsSwitcher activeTab={activeTab} setActiveTab={setActiveTab} />
         <TableSummary
           ingresos={ingresosQuincenales}
           gastos={gastosQuincenales}
