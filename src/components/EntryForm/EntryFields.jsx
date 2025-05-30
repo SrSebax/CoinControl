@@ -135,6 +135,11 @@ export default function EntryFields({ isExpense, formData, handleChange }) {
             ? "bg-[var(--color-expense)] hover:bg-[var(--color-expense-hover)]"
             : "bg-[var(--color-income)] hover:bg-[var(--color-income-hover)]"
         }
+        text={
+          isExpense
+            ? "text-[var(--color-expense-text)]"
+            : "text-[var(--color-income-text)]"
+        }
         disabled={!isFormValid}
       />
     </div>

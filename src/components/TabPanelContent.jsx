@@ -23,13 +23,15 @@ export default function TabPanelContent({ activeTab }) {
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
         <button
-  onClick={redirectToForm}
-  className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-[var(--color-primary)] bg-white border border-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-all shadow-sm hover:shadow-md"
->
-  <PlusCircle size={18} className="transition-transform group-hover:rotate-90" />
-  <span>Agregar</span>
-</button>
-
+          onClick={redirectToForm}
+          className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-[var(--color-primary)] bg-white border border-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-all shadow-sm hover:shadow-md"
+        >
+          <PlusCircle
+            size={18}
+            className="transition-transform group-hover:rotate-90"
+          />
+          <span>Agregar</span>
+        </button>
       </div>
 
       <p className="text-sm text-gray-600">{description}</p>

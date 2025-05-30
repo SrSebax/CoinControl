@@ -9,7 +9,7 @@ export default function HomeView() {
   const [activeTab, setActiveTab] = useState("gastos");
 
   const ingresosQuincenales = 1090000;
-  const gastosQuincenales = 680000;
+  const gastosQuincenales = 2680000;
 
   return (
     <Layout>
