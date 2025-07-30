@@ -29,7 +29,7 @@ export default function UserActions() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 bg-white hover:shadow-md transition-all duration-200"
+        className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 bg-white hover:shadow-md transition-all duration-200 cursor-pointer"
         aria-label="Perfil de usuario"
       >
         <User size={18} className="text-teal-600" />

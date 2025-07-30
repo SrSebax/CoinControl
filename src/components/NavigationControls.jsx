@@ -9,7 +9,7 @@ export default function NavigationControls({ mobileOpen, toggleMobile }) {
       <button
         onClick={() => navigate(-1)}
         title="Ir a la página anterior"
-        className="hidden md:inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+        className="hidden md:inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 cursor-pointer"
         aria-label="Atrás"
       >
         <ChevronLeft size={22} />
@@ -18,7 +18,7 @@ export default function NavigationControls({ mobileOpen, toggleMobile }) {
       <button
         onClick={() => navigate(1)}
         title="Ir a la página siguiente"
-        className="hidden md:inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+        className="hidden md:inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 cursor-pointer"
         aria-label="Adelante"
       >
         <ChevronRight size={22} />
@@ -27,7 +27,7 @@ export default function NavigationControls({ mobileOpen, toggleMobile }) {
       <button
         onClick={toggleMobile}
         title={mobileOpen ? "Cerrar menú" : "Abrir menú"}
-        className="md:hidden text-gray-600 hover:text-gray-900 mr-1"
+        className="md:hidden text-gray-600 hover:text-gray-900 mr-1 cursor-pointer"
         aria-label="Alternar menú móvil"
       >
         {mobileOpen ? <X size={24} /> : <Menu size={24} />}

@@ -8,6 +8,7 @@ import HomeView from "../pages/HomeView";
 import NewEntryView from "../pages/NewEntryView";
 import NotFoundView from "../pages/NotFoundView";
 import LoginView from "../pages/LoginView";
+import CategoriesView from '../pages/CategoriesView';
 
 export default function AppRoutes() {
   const [loading, setLoading] = useState(true);
@@ -50,6 +51,10 @@ export default function AppRoutes() {
       <Route
         path="/new-entry"
         element={user ? <NewEntryView /> : <Navigate to="/" replace />}
+      />
+      <Route
+        path="/categories"
+        element={user ? <CategoriesView /> : <Navigate to="/" replace />}
       />
 
       {/* Login pública */}

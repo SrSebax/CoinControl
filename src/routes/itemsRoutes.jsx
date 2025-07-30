@@ -1,9 +1,7 @@
 import {
   LayoutDashboard,
   PieChart,
-  CreditCard,
   Settings,
-  BarChart3,
   FolderKanban,
   PlusCircle,
 } from "lucide-react";
@@ -11,11 +9,9 @@ import {
 export const itemsRoutes = [
   { path: "/home", label: "Inicio", icon: <LayoutDashboard size={20} /> },
   { path: "/summary", label: "Resumen", icon: <PieChart size={20} /> },
-  { path: "/payments", label: "Pagos", icon: <CreditCard size={20} /> },
-  { path: "/charts", label: "Gráficos", icon: <BarChart3 size={20} /> },
   {
     path: "/new-entry",
-    label: "Registrar Movimiento",
+    label: "Movimientos",
     icon: <PlusCircle size={20} />,
   },
   {
