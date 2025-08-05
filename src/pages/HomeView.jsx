@@ -1,16 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Layout from "../components/Layout";
 import TabsSwitcher from "../components/TabsSwitcher";
 import TabPanelContent from "../components/TabPanelContent";
 import TableSummary from "../components/TableSummary";
 import PageHeading from "../components/PageHeading";
-import { moneyData } from "../data/data";
+import { useTransactions } from "../hooks/useLocalStorage";
+import ToastMessage from "../components/ToastMessage";
 
 export default function HomeView() {
   const [activeTab, setActiveTab] = useState("gastos");
+  const [toast, setToast] = useState(null);
+  const location = useLocation();
+  const { summary } = useTransactions();
+
+  useEffect(() => {
+    if (location.state?.message) {
+      setToast({
+        message: location.state.message,
+        type: location.state.type || 'success'
+      });
+      
+      // Limpiar el estado de navegación
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
+  const closeToast = () => {
+    setToast(null);
+  };
 
   return (
     <Layout>
+      {toast && (
+        <ToastMessage
+          message={toast.message}
+          type={toast.type}
+          onClose={closeToast}
+        />
+      )}
+      
       <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 space-y-6">
         <div className="text-center sm:text-left">
           <PageHeading title="Bienvenido a CoinControl" />
@@ -18,8 +47,8 @@ export default function HomeView() {
         </div>
 
         <TableSummary
-          ingresos={moneyData.ingresos}
-          gastos={moneyData.gastos}
+          ingresos={summary.ingresos}
+          gastos={summary.gastos}
         />
         <TabPanelContent activeTab={activeTab} />
       </div>

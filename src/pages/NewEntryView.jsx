@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Layout from "../components/Layout";
 import TabsSwitcher from "../components/TabsSwitcher";
 import PageHeading from "../components/PageHeading";
@@ -8,10 +9,21 @@ import SelectInput from "../components/inputs/SelectInput";
 import DateInput from "../components/inputs/DateInput";
 import NoteTextarea from "../components/inputs/NoteTextarea";
 import { ArrowDownCircle, ArrowUpCircle } from "lucide-react";
+import { useTransactions } from "../hooks/useLocalStorage";
 import { expenseCategories, incomeCategories } from "../data/data";
 
 export default function NewEntryView() {
-  const [activeTab, setActiveTab] = useState("gastos");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { addTransaction } = useTransactions();
+  
+  // Determinar el tipo basado en el estado de navegación o el tab activo
+  const [activeTab, setActiveTab] = useState(() => {
+    if (location.state?.type === 'expense') return "gastos";
+    if (location.state?.type === 'income') return "ingresos";
+    return "gastos";
+  });
+  
   const isExpense = activeTab === "gastos";
 
   const [formData, setFormData] = useState({
@@ -22,6 +34,7 @@ export default function NewEntryView() {
   });
 
   const [touched, setTouched] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,6 +45,38 @@ export default function NewEntryView() {
     touched[field] && (!formData[field] || formData[field].trim() === "");
 
   const isFormValid = formData.amount && formData.category && formData.date;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!isFormValid) return;
+
+    setIsSubmitting(true);
+    
+    try {
+      const transaction = {
+        type: isExpense ? 'expense' : 'income',
+        amount: parseFloat(formData.amount),
+        category: formData.category,
+        date: formData.date,
+        note: formData.note.trim() || null
+      };
+
+      addTransaction(transaction);
+      
+      // Redirigir a la página principal
+      navigate('/', { 
+        state: { 
+          message: `${isExpense ? 'Gasto' : 'Ingreso'} registrado exitosamente`,
+          type: 'success'
+        }
+      });
+    } catch (error) {
+      console.error('Error al guardar la transacción:', error);
+      // Aquí podrías mostrar un mensaje de error
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     if (!formData.date) {
@@ -46,9 +91,9 @@ export default function NewEntryView() {
 
   const categorias = isExpense ? expenseCategories : incomeCategories;
 
-  return (
+    return (
     <Layout>
-      <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 space-y-6">
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 space-y-6">
         <div className="text-center sm:text-left">
           <PageHeading title="Registrar nuevo movimiento" />
           <TabsSwitcher activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -95,10 +140,11 @@ export default function NewEntryView() {
                 ? "text-[var(--color-expense-text)]"
                 : "text-[var(--color-income-text)]"
             }
-            disabled={!isFormValid}
+            disabled={!isFormValid || isSubmitting}
+            loading={isSubmitting}
           />
         </div>
-      </div>
+      </form>
     </Layout>
   );
 }
