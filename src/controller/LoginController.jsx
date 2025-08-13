@@ -3,6 +3,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth, googleProvider } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +31,7 @@ export function useLoginController() {
       "auth/email-already-in-use": "Este correo ya está registrado.",
       "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
       "auth/popup-closed-by-user": "Cierre inesperado. Intenta de nuevo.",
+      "auth/missing-email": "Debes ingresar un correo electrónico.",
     };
     return messages[code] || "Ocurrió un error. Intenta nuevamente.";
   };
@@ -64,6 +66,17 @@ export function useLoginController() {
     }
   };
 
+  const resetPassword = async (email) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      showAlert("success", "Se ha enviado un correo para restablecer tu contraseña");
+      return true;
+    } catch (error) {
+      showAlert("error", getErrorMessage(error.code));
+      return false;
+    }
+  };
+
   return {
     email,
     password,
@@ -72,6 +85,7 @@ export function useLoginController() {
     loginWithEmail,
     registerWithEmail,
     loginWithGoogle,
+    resetPassword,
     alert,
     handleCloseAlert,
   };

@@ -40,7 +40,7 @@ export default function HomeView() {
         />
       )}
       
-      <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 space-y-6">
+      <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-6 space-y-6 transition-all duration-300 hover:shadow-xl">
         <div className="text-center sm:text-left">
           <PageHeading title="Bienvenido a CoinControl" />
           <TabsSwitcher activeTab={activeTab} setActiveTab={setActiveTab} />

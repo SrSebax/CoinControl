@@ -5,13 +5,13 @@ export default function TabsSwitcher({ activeTab, setActiveTab }) {
   const isIngresos = activeTab === "ingresos";
 
   return (
-    <div className="inline-flex p-1 bg-gray-100 rounded-xl shadow-inner mb-8">
+    <div className="inline-flex p-1 bg-gray-100/80 backdrop-blur-sm rounded-xl shadow-inner mb-8 transition-all duration-300 hover:shadow">
       <button
         onClick={() => setActiveTab("gastos")}
         className={`px-5 py-2 rounded-xl flex items-center gap-2 text-sm font-medium transition-all duration-200 ${
           isGastos
-            ? "text-red-800 shadow"
-            : "text-gray-600 hover:text-red-700"
+            ? "text-red-800 shadow-md"
+            : "text-gray-600 hover:text-red-700 hover:shadow-sm"
         }`}
         style={{
           backgroundColor: isGastos ? "var(--color-expense)" : "transparent",
@@ -29,8 +29,8 @@ export default function TabsSwitcher({ activeTab, setActiveTab }) {
         onClick={() => setActiveTab("ingresos")}
         className={`px-5 py-2 rounded-xl flex items-center gap-2 text-sm font-medium transition-all duration-200 ${
           isIngresos
-            ? "text-green-800 shadow"
-            : "text-gray-600 hover:text-green-700"
+            ? "text-green-800 shadow-md"
+            : "text-gray-600 hover:text-green-700 hover:shadow-sm"
         }`}
         style={{
           backgroundColor: isIngresos ? "var(--color-income)" : "transparent",

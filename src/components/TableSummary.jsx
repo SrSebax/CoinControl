@@ -18,7 +18,7 @@ export default function TableSummary({ ingresos = 0, gastos = 0 }) {
       title: "Ingresos",
       icon: <ArrowUpCircle className="text-green-600" size={26} />,
       value: ingresos,
-      bg: "bg-green-50",
+      bg: "bg-green-50/80",
       border: "border-green-200",
       textColor: "text-green-700",
     },
@@ -26,7 +26,7 @@ export default function TableSummary({ ingresos = 0, gastos = 0 }) {
       title: "Gastos",
       icon: <ArrowDownCircle className="text-red-600" size={26} />,
       value: gastos,
-      bg: "bg-red-50",
+      bg: "bg-red-50/80",
       border: "border-red-200",
       textColor: "text-red-700",
     },
@@ -34,7 +34,7 @@ export default function TableSummary({ ingresos = 0, gastos = 0 }) {
       title: "Saldo",
       icon: <Equal className="text-blue-600" size={26} />,
       value: saldo,
-      bg: saldo >= 0 ? "bg-blue-50" : "bg-rose-50",
+      bg: saldo >= 0 ? "bg-blue-50/80" : "bg-rose-50/80",
       border: saldo >= 0 ? "border-blue-200" : "border-rose-200",
       textColor: saldo >= 0 ? "text-blue-700" : "text-rose-700",
       badge:
@@ -57,14 +57,14 @@ export default function TableSummary({ ingresos = 0, gastos = 0 }) {
           ({ title, icon, value, bg, border, textColor, badge }, idx) => (
             <div
               key={idx}
-              className={`relative overflow-hidden flex flex-col justify-between gap-3 p-6 rounded-2xl shadow-sm border ${bg} ${border} transition hover:shadow-md`}
+              className={`relative overflow-hidden flex flex-col justify-between gap-3 p-6 rounded-2xl shadow-md border ${bg} ${border} backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:scale-[1.02]`}
             >
               <div className="flex items-center justify-between">
                 <div className="text-sm font-medium text-gray-600">{title}</div>
                 {icon}
               </div>
 
-              <div className={`text-2xl font-bold ${textColor}`}>
+              <div className={`text-2xl font-extrabold ${textColor}`}>
                 {formatCurrency(value)}
               </div>
 

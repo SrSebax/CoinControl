@@ -11,7 +11,7 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
   const { pathname } = useLocation();
 
   const baseClasses =
-    "fixed inset-y-0 left-0 z-40 bg-[var(--color-sidebar)] border-r border-[var(--color-sidebar-border)] transition-[width] duration-300 ease-in-out h-screen flex flex-col";
+    "fixed inset-y-0 left-0 z-40 bg-[var(--color-sidebar)]/95 backdrop-blur-md border-r border-[var(--color-sidebar-border)] transition-all duration-300 ease-in-out h-screen flex flex-col shadow-lg";
   const widthClass = collapsed ? "w-16" : "w-64";
   const translateClass = mobileOpen ? "translate-x-0" : "-translate-x-full";
 
@@ -57,8 +57,8 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
                 flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out
                 ${
                   pathname === path
-                    ? "bg-[var(--color-primary)] text-white scale-[1.02]"
-                    : "text-[var(--color-text-secondary)] hover:bg-[var(--color-hover)] hover:scale-[1.02]"
+                    ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]"
+                    : "text-[var(--color-text-secondary)] hover:bg-[var(--color-hover)] hover:scale-[1.02] hover:shadow-sm"
                 }
               `}
                 onClick={() => setMobileOpen(false)}

@@ -1,15 +1,17 @@
 import { useEffect } from 'react';
 import { CheckCircle, XCircle, X } from 'lucide-react';
 
-export default function ToastMessage({ message, type = 'success', onClose }) {
+export default function ToastMessage({ open = false, message, type = 'success', onClose, duration = 5000 }) {
   useEffect(() => {
-    // Auto-cerrar después de 5 segundos
+    if (!open) return;
+    
+    // Auto-cerrar después del tiempo especificado
     const timer = setTimeout(() => {
       onClose();
-    }, 5000);
+    }, duration);
 
     return () => clearTimeout(timer);
-  }, [onClose]);
+  }, [open, onClose, duration]);
 
   const getIcon = () => {
     switch (type) {
@@ -33,6 +35,8 @@ export default function ToastMessage({ message, type = 'success', onClose }) {
     }
   };
 
+  if (!open) return null;
+  
   return (
     <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-right-2">
       <div className={`flex items-center gap-3 p-4 rounded-lg border shadow-lg ${getStyles()}`}>
