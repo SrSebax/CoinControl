@@ -10,9 +10,10 @@ import EditEntryView from "../pages/EditEntryView";
 import SelectEntryView from "../pages/SelectEntryView";
 import NotFoundView from "../pages/NotFoundView";
 import LoginView from "../pages/LoginView";
-import CategoriesView from '../pages/CategoriesView';
-import EditCategoryView from '../pages/EditCategoryView';
-import SelectCategoryView from '../pages/SelectCategoryView';
+import CategoriesView from "../pages/CategoriesView";
+import EditCategoryView from "../pages/EditCategoryView";
+import SelectCategoryView from "../pages/SelectCategoryView";
+import PocketsView from "../pages/PocketsView";
 
 export default function AppRoutes() {
   const [loading, setLoading] = useState(true);
@@ -77,6 +78,11 @@ export default function AppRoutes() {
         element={user ? <EditEntryView /> : <Navigate to="/" replace />}
       />
 
+      {/* Rutas de Bolsillos */}
+      <Route
+        path="/pockets"
+        element={user ? <PocketsView /> : <Navigate to="/" replace />}
+      />
       {/* Login pública */}
       <Route
         path="/"
