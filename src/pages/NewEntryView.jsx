@@ -35,6 +35,11 @@ export default function NewEntryView() {
   // Manejador personalizado para cambiar el tipo de transacción
   const handleTabChange = (newTab) => {
     setActiveTab(newTab);
+    // Limpiar la categoría seleccionada al cambiar de tipo de transacción
+    setFormData(prev => ({
+      ...prev,
+      category: ""
+    }));
   };
   
   // Estado para el modal de confirmación
@@ -139,6 +144,12 @@ export default function NewEntryView() {
   const handleCancelSubmit = () => {
     setConfirmModal({ open: false, title: "", message: "", data: null });
   };
+  
+  // Función para manejar la adición de una nueva categoría
+  const handleAddNewCategory = () => {
+    // Navegar a la página de categorías
+    navigate('/categories');
+  };
 
   useEffect(() => {
     if (!formData.date) {
@@ -187,10 +198,11 @@ export default function NewEntryView() {
               onChange={handleChange}
               onBlur={() => setTouched((prev) => ({ ...prev, category: true }))}
               error={isEmpty("category")}
-              name="category"
               label="Categoría"
-              required={true}
-              placeholder={`Selecciona una ${isExpense ? 'categoría de gasto' : 'categoría de ingreso'}`}
+              name="category"
+              placeholder="Selecciona una categoría"
+              onAddNew={() => handleAddNewCategory()}
+              addNewLabel="Agregar categoría"
             />
 
             <DateInput
@@ -198,6 +210,8 @@ export default function NewEntryView() {
               onChange={handleChange}
               onBlur={() => setTouched((prev) => ({ ...prev, date: true }))}
               error={isEmpty("date")}
+              label="Fecha"
+              name="date"
             />
           </div>
 
