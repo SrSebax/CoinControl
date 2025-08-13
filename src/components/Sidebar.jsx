@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { X } from "lucide-react";
+import { X, Edit, PlusCircle } from "lucide-react";
 import logoFull from "../assets/coin-control-light.svg";
 import logoCollapsed from "../assets/pig-coin-control.svg";
 import nordwareFullLogo from "../assets/nørdware/nordware-full-dark.svg";
@@ -49,28 +49,127 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
         <div className="flex-1 overflow-hidden flex flex-col min-h-0">
           {/* Navegación con scroll */}
           <nav className="flex flex-col gap-1 px-2 flex-1">
-            {itemsRoutes.map(({ path, label, icon }) => (
-              <Link
-                key={path}
-                to={path}
-                className={`
-                flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out
-                ${
-                  pathname === path
-                    ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]"
-                    : "text-[var(--color-text-secondary)] hover:bg-[var(--color-hover)] hover:scale-[1.02] hover:shadow-sm"
-                }
-              `}
-                onClick={() => setMobileOpen(false)}
-              >
-                {icon}
-                {!collapsed && (
-                  <span className="transition-opacity duration-200">
-                    {label}
-                  </span>
-                )}
-              </Link>
-            ))}
+            {itemsRoutes.map(({ path, label, icon }) => {
+              // Verificar si es la ruta de categorías para agregar la opción de crear
+              if (path === "/categories") {
+                return (
+                  <React.Fragment key={path}>
+                    <Link
+                      to={path}
+                      className={`
+                      flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out
+                      ${
+                        pathname === path && 
+                        !(path === "/categories" && (pathname === "/select-category" || pathname.startsWith("/edit-category/"))) &&
+                        !(path === "/new-entry" && (pathname === "/select-entry" || pathname.startsWith("/edit-entry/")))
+                          ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]"
+                          : "text-[var(--color-text-secondary)] hover:bg-[var(--color-hover)] hover:scale-[1.02] hover:shadow-sm"
+                      }
+                    `}
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {icon}
+                      {!collapsed && (
+                        <span className="transition-opacity duration-200">
+                          {label}
+                        </span>
+                      )}
+                    </Link>
+                    {!collapsed && (
+                      <Link
+                        to="/select-category"
+                        className={`
+                        flex items-center gap-3 px-3 py-2 ml-4 rounded-md text-sm font-medium transition-all duration-200 ease-in-out
+                        ${
+                          pathname === "/select-category" || pathname.startsWith("/edit-category/")
+                            ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]"
+                            : "text-[var(--color-text-secondary)] hover:bg-[var(--color-hover)] hover:scale-[1.02] hover:shadow-sm"
+                        }
+                      `}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        <Edit size={18} />
+                        <span className="transition-opacity duration-200">
+                          Editar Categoría
+                        </span>
+                      </Link>
+                    )}
+                  </React.Fragment>
+                );
+              }
+              
+              // Verificar si es la ruta de movimientos para agregar la opción de crear
+              if (path === "/new-entry") {
+                return (
+                  <React.Fragment key={path}>
+                    <Link
+                      to={path}
+                      className={`
+                      flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out
+                      ${
+                        pathname === path && 
+                        !(path === "/categories" && (pathname === "/select-category" || pathname.startsWith("/edit-category/"))) &&
+                        !(path === "/new-entry" && (pathname === "/select-entry" || pathname.startsWith("/edit-entry/")))
+                          ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]"
+                          : "text-[var(--color-text-secondary)] hover:bg-[var(--color-hover)] hover:scale-[1.02] hover:shadow-sm"
+                      }
+                    `}
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {icon}
+                      {!collapsed && (
+                        <span className="transition-opacity duration-200">
+                          {label}
+                        </span>
+                      )}
+                    </Link>
+                    {!collapsed && (
+                      <Link
+                        to="/select-entry"
+                        className={`
+                        flex items-center gap-3 px-3 py-2 ml-4 rounded-md text-sm font-medium transition-all duration-200 ease-in-out
+                        ${
+                          pathname === "/select-entry" || pathname.startsWith("/edit-entry/")
+                            ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]"
+                            : "text-[var(--color-text-secondary)] hover:bg-[var(--color-hover)] hover:scale-[1.02] hover:shadow-sm"
+                        }
+                      `}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        <Edit size={18} />
+                        <span className="transition-opacity duration-200">
+                          Editar Movimiento
+                        </span>
+                      </Link>
+                    )}
+                  </React.Fragment>
+                );
+              }
+              
+              // Para las demás rutas, mantener el comportamiento original
+              return (
+                <Link
+                  key={path}
+                  to={path}
+                  className={`
+                  flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out
+                  ${
+                    pathname === path
+                      ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]"
+                      : "text-[var(--color-text-secondary)] hover:bg-[var(--color-hover)] hover:scale-[1.02] hover:shadow-sm"
+                  }
+                `}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {icon}
+                  {!collapsed && (
+                    <span className="transition-opacity duration-200">
+                      {label}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
           </nav>
         </div>
 

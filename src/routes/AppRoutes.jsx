@@ -6,9 +6,13 @@ import { auth } from "../services/firebase";
 import SplashView from "../pages/SplashView";
 import HomeView from "../pages/HomeView";
 import NewEntryView from "../pages/NewEntryView";
+import EditEntryView from "../pages/EditEntryView";
+import SelectEntryView from "../pages/SelectEntryView";
 import NotFoundView from "../pages/NotFoundView";
 import LoginView from "../pages/LoginView";
 import CategoriesView from '../pages/CategoriesView';
+import EditCategoryView from '../pages/EditCategoryView';
+import SelectCategoryView from '../pages/SelectCategoryView';
 
 export default function AppRoutes() {
   const [loading, setLoading] = useState(true);
@@ -55,6 +59,22 @@ export default function AppRoutes() {
       <Route
         path="/categories"
         element={user ? <CategoriesView /> : <Navigate to="/" replace />}
+      />
+      <Route
+        path="/select-category"
+        element={user ? <SelectCategoryView /> : <Navigate to="/" replace />}
+      />
+      <Route
+        path="/edit-category/:categoryId"
+        element={user ? <EditCategoryView /> : <Navigate to="/" replace />}
+      />
+      <Route
+        path="/select-entry"
+        element={user ? <SelectEntryView /> : <Navigate to="/" replace />}
+      />
+      <Route
+        path="/edit-entry/:entryId"
+        element={user ? <EditEntryView /> : <Navigate to="/" replace />}
       />
 
       {/* Login pública */}

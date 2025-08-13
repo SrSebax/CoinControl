@@ -2,7 +2,7 @@ import { useState, forwardRef, useEffect } from "react";
 import { Calendar } from "lucide-react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "./DateInput.css";
+import "../../styles/DateInput.css";
 import es from 'date-fns/locale/es';
 
 // Registrar el idioma español

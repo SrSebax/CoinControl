@@ -34,13 +34,7 @@ export default function TabPanelContent({ activeTab }) {
   };
   
   const handleEditTransaction = (transaction) => {
-    navigate("/new-entry", {
-      state: { 
-        type: transaction.type,
-        transaction: transaction,
-        isEditing: true
-      },
-    });
+    navigate(`/edit-entry/${transaction.id}`);
   };
   
   const handleDeleteClick = (transaction) => {

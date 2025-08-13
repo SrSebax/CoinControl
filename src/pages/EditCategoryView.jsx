@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Layout from "../components/Layout";
 import TabsSwitcher from "../components/TabsSwitcher";
 import PageHeading from "../components/PageHeading";
@@ -8,157 +8,132 @@ import ColorInput from "../components/inputs/ColorInput";
 import IconInput from "../components/inputs/IconInput";
 import SubmitButton from "../components/SubmitButton";
 import ConfirmModal from "../components/ConfirmModal";
-import { Plus } from "lucide-react";
+import { Save } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import { useCategories } from "../hooks/useCategories";
 
-export default function CategoriesView() {
-  // eslint-disable-next-line no-unused-vars
+export default function EditCategoryView() {
   const navigate = useNavigate();
-  const { addCategory, deleteCategory, updateCategory } = useCategories();
-
-  const [activeTab, setActiveTab] = useState("gastos");
+  const location = useLocation();
+  const { categoryId } = useParams();
+  const { categories, updateCategory } = useCategories();
+  
+  // Determinar el tipo basado en el estado de navegación
+  const [activeTab, setActiveTab] = useState(() => {
+    return location.state?.type === 'income' ? "ingresos" : "gastos";
+  });
+  
   const isExpense = activeTab === "gastos";
   const typeKey = isExpense ? "expense" : "income";
-
+  
   const [formData, setFormData] = useState({
     name: "",
     color: "",
-    icon: "",
+    icon: ""
   });
-
+  
   const [touched, setTouched] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-
+  
   const [confirmModal, setConfirmModal] = useState({
     open: false,
     title: "",
     message: "",
-    data: null,
-    action: "",
+    data: null
   });
-
-  // Estado para la búsqueda
-  const [, setSearchTerm] = useState("");
-
-  // Lista de categorías según el tipo activo
-
-  // Lista filtrada según el término de búsqueda
-
+  
+  // Cargar los datos de la categoría a editar
+  useEffect(() => {
+    if (categoryId) {
+      const categoryList = categories[typeKey] || [];
+      const category = categoryList.find(cat => cat.id === categoryId);
+      
+      if (category) {
+        setFormData({
+          name: category.name,
+          color: category.color,
+          icon: category.icon
+        });
+      } else {
+        // Si no se encuentra la categoría, redirigir a la vista de categorías
+        navigate('/categories');
+      }
+    }
+  }, [categoryId, categories, typeKey, navigate]);
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
+  
   const isEmpty = (field) =>
     touched[field] && (!formData[field] || formData[field].trim() === "");
-
+  
   const isFormValid = formData.name && formData.color && formData.icon;
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isFormValid) return;
-
+    
     const categoryData = {
       type: typeKey,
       name: formData.name.trim(),
       color: formData.color,
-      icon: formData.icon,
+      icon: formData.icon
     };
-
+    
     // Mostrar modal de confirmación
     setConfirmModal({
       open: true,
-      title: isEditing ? "¿Actualizar categoría?" : "¿Guardar categoría?",
-      message: isEditing
-        ? "¿Estás seguro de actualizar esta categoría?"
-        : "¿Estás seguro de guardar esta categoría?",
-      data: categoryData,
-      action: isEditing ? "update" : "add",
+      title: "¿Actualizar categoría?",
+      message: "¿Estás seguro de actualizar esta categoría?",
+      data: categoryData
     });
   };
-
+  
   const handleConfirmSubmit = async () => {
     setIsSubmitting(true);
-
+    
     try {
-      if (confirmModal.action === "update" && editingId) {
-        // Actualizar categoría existente
-        updateCategory(editingId, typeKey, confirmModal.data);
-
-        // Mostrar mensaje de éxito
-        // Aquí podrías implementar un sistema de notificaciones
-      } else if (confirmModal.action === "add") {
-        // Crear nueva categoría
-        addCategory(confirmModal.data);
-
-        // Mostrar mensaje de éxito
-        // Aquí podrías implementar un sistema de notificaciones
-      } else if (confirmModal.action === "delete" && confirmModal.data) {
-        // Eliminar categoría
-        deleteCategory(confirmModal.data, typeKey);
-
-        // Mostrar mensaje de éxito
-        // Aquí podrías implementar un sistema de notificaciones
-      }
-
-      // Limpiar formulario
-      resetForm();
+      // Actualizar categoría existente
+      updateCategory(categoryId, typeKey, confirmModal.data);
+      
+      // Redirigir a la vista de categorías
+      navigate('/categories', { 
+        state: { 
+          message: 'Categoría actualizada exitosamente',
+          type: 'success'
+        }
+      });
     } catch (error) {
-      console.error("Error al procesar la categoría:", error);
-      // Aquí podrías mostrar un mensaje de error
+      console.error('Error al actualizar la categoría:', error);
     } finally {
       setIsSubmitting(false);
-      setConfirmModal({
-        open: false,
-        title: "",
-        message: "",
-        data: null,
-        action: "",
-      });
+      setConfirmModal({ open: false, title: "", message: "", data: null });
     }
   };
-
+  
   const handleCancelSubmit = () => {
-    setConfirmModal({
-      open: false,
-      title: "",
-      message: "",
-      data: null,
-      action: "",
-    });
+    setConfirmModal({ open: false, title: "", message: "", data: null });
   };
-
-  const resetForm = () => {
-    setFormData({
-      name: "",
-      color: "",
-      icon: "",
-    });
-    setTouched({});
-    setIsEditing(false);
-    setEditingId(null);
+  
+  const handleCancel = () => {
+    navigate('/categories');
   };
-
+  
   const handleTabChange = (newTab) => {
     setActiveTab(newTab);
-    resetForm();
-    setSearchTerm("");
+    // Aquí podrías actualizar el tipo de categoría si es necesario
   };
-
-  // Función para renderizar el icono de la categoría
 
   return (
     <Layout>
       <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 space-y-6">
         <div className="text-center sm:text-left">
-          <PageHeading
-            title={isEditing ? "Editar categoría" : "Registrar nueva categoría"}
-          />
+          <PageHeading title="Editar categoría" />
           <TabsSwitcher activeTab={activeTab} setActiveTab={handleTabChange} />
         </div>
-
+        
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col space-y-6">
             <NameInput
@@ -169,14 +144,14 @@ export default function CategoriesView() {
               label="Nombre de categoría"
               placeholder="Ej: Salud"
             />
-
+            
             <ColorInput
               value={formData.color}
               onChange={handleChange}
               onBlur={() => setTouched((prev) => ({ ...prev, color: true }))}
               error={isEmpty("color")}
             />
-
+            
             <IconInput
               value={formData.icon}
               onChange={handleChange}
@@ -184,21 +159,19 @@ export default function CategoriesView() {
               error={isEmpty("icon")}
             />
           </div>
-
-          <div className="flex flex-col w-full">
-            {isEditing && (
-              <button
-                type="button"
-                onClick={resetForm}
-                className="mb-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                Cancelar
-              </button>
-            )}
-
+          
+          <div className="flex flex-col w-full space-y-2">
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              Cancelar
+            </button>
+            
             <SubmitButton
-              label={isEditing ? "Actualizar categoría" : "Guardar categoría"}
-              Icon={Plus}
+              label="Actualizar categoría"
+              Icon={Save}
               color={
                 isExpense
                   ? "bg-[var(--color-expense)] hover:bg-[var(--color-expense-hover)]"
@@ -216,7 +189,7 @@ export default function CategoriesView() {
           </div>
         </form>
       </div>
-
+      
       {/* Modal de confirmación */}
       <ConfirmModal
         open={confirmModal.open}

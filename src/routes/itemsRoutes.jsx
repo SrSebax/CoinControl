@@ -4,6 +4,7 @@ import {
   Settings,
   FolderKanban,
   PlusCircle,
+  Edit,
 } from "lucide-react";
 
 export const itemsRoutes = [
