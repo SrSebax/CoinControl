@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { X, Edit, PlusCircle } from "lucide-react";
+import { X, Edit, PlusCircle, ChevronDown, ChevronRight } from "lucide-react";
 import logoFull from "../assets/coin-control-light.svg";
 import logoCollapsed from "../assets/pig-coin-control.svg";
 import nordwareFullLogo from "../assets/nørdware/nordware-full-dark.svg";
@@ -9,6 +9,20 @@ import { itemsRoutes } from "../routes/itemsRoutes";
 
 export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
   const { pathname } = useLocation();
+  const [expandedItems, setExpandedItems] = useState({
+    categories: pathname.includes("/categories") || pathname.includes("/select-category") || pathname.includes("/edit-category"),
+    pockets: pathname.includes("/pockets") || pathname.includes("/select-pocket") || pathname.includes("/edit-pocket"),
+    entries: pathname.includes("/new-entry") || pathname.includes("/select-entry") || pathname.includes("/edit-entry")
+  });
+
+  const toggleExpanded = (item) => {
+    if (collapsed) return;
+    // Solo alternar la sección actual sin cerrar las demás
+    setExpandedItems(prev => ({
+      ...prev,
+      [item]: !prev[item]
+    }));
+  };
 
   const baseClasses =
     "fixed inset-y-0 left-0 z-40 bg-[var(--color-sidebar)]/95 backdrop-blur-md border-r border-[var(--color-sidebar-border)] transition-all duration-300 ease-in-out h-screen flex flex-col shadow-lg";
@@ -53,37 +67,31 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
               // Verificar si es la ruta de categorías para agregar la opción de crear
               if (path === "/categories") {
                 return (
-                  <React.Fragment key={path}>
-                    <Link
-                      to={path}
-                      className={`
-                      flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out
-                      ${
-                        pathname === path &&
-                        !(
-                          path === "/categories" &&
-                          (pathname === "/select-category" ||
-                            pathname.startsWith("/edit-category/"))
-                        ) &&
-                        !(
-                          path === "/new-entry" &&
-                          (pathname === "/select-entry" ||
-                            pathname.startsWith("/edit-entry/"))
-                        )
-                          ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]"
-                          : "text-[var(--color-text-secondary)] hover:bg-[var(--color-hover)] hover:scale-[1.02] hover:shadow-sm"
-                      }
-                    `}
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      {icon}
+                  <div key={path} className="flex flex-col">
+                    <div className={`flex items-center rounded-md ${pathname === path ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]" : "hover:bg-[var(--color-hover)] hover:shadow-sm"} transition-all duration-200 ease-in-out`}>
+                      <Link
+                        to={path}
+                        className="flex items-center gap-3 px-3 py-2 text-sm font-medium flex-grow"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {icon}
+                        {!collapsed && (
+                          <span className="transition-opacity duration-200">
+                            {label}
+                          </span>
+                        )}
+                      </Link>
                       {!collapsed && (
-                        <span className="transition-opacity duration-200">
-                          {label}
-                        </span>
+                        <button
+                          onClick={() => toggleExpanded("categories")}
+                          className="pr-3 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
+                          aria-label={expandedItems.categories ? "Contraer categorías" : "Expandir categorías"}
+                        >
+                          {expandedItems.categories ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                        </button>
                       )}
-                    </Link>
-                    {!collapsed && (
+                    </div>
+                    {!collapsed && expandedItems.categories && (
                       <Link
                         to="/select-category"
                         className={`
@@ -103,38 +111,38 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
                         </span>
                       </Link>
                     )}
-                  </React.Fragment>
+                  </div>
                 );
               }
 
               // Ruta de bolsillos con opción de editar
               if (path === "/pockets") {
                 return (
-                  <React.Fragment key={path}>
-                    <Link
-                      to={path}
-                      className={`
-                      flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out
-                      ${
-                        pathname === path &&
-                        !(
-                          pathname === "/select-pocket" ||
-                          pathname.startsWith("/edit-pocket/")
-                        )
-                          ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]"
-                          : "text-[var(--color-text-secondary)] hover:bg-[var(--color-hover)] hover:scale-[1.02] hover:shadow-sm"
-                      }
-                    `}
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      {icon}
+                  <div key={path} className="flex flex-col">
+                    <div className={`flex items-center rounded-md ${pathname === path ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]" : "hover:bg-[var(--color-hover)] hover:shadow-sm"} transition-all duration-200 ease-in-out`}>
+                      <Link
+                        to={path}
+                        className="flex items-center gap-3 px-3 py-2 text-sm font-medium flex-grow"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {icon}
+                        {!collapsed && (
+                          <span className="transition-opacity duration-200">
+                            {label}
+                          </span>
+                        )}
+                      </Link>
                       {!collapsed && (
-                        <span className="transition-opacity duration-200">
-                          {label}
-                        </span>
+                        <button
+                          onClick={() => toggleExpanded("pockets")}
+                          className="pr-3 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
+                          aria-label={expandedItems.pockets ? "Contraer bolsillos" : "Expandir bolsillos"}
+                        >
+                          {expandedItems.pockets ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                        </button>
                       )}
-                    </Link>
-                    {!collapsed && (
+                    </div>
+                    {!collapsed && expandedItems.pockets && (
                       <Link
                         to="/select-pocket"
                         className={`
@@ -154,44 +162,38 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
                         </span>
                       </Link>
                     )}
-                  </React.Fragment>
+                  </div>
                 );
               }
 
               // Verificar si es la ruta de movimientos para agregar la opción de crear
               if (path === "/new-entry") {
                 return (
-                  <React.Fragment key={path}>
-                    <Link
-                      to={path}
-                      className={`
-                      flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ease-in-out
-                      ${
-                        pathname === path &&
-                        !(
-                          path === "/categories" &&
-                          (pathname === "/select-category" ||
-                            pathname.startsWith("/edit-category/"))
-                        ) &&
-                        !(
-                          path === "/new-entry" &&
-                          (pathname === "/select-entry" ||
-                            pathname.startsWith("/edit-entry/"))
-                        )
-                          ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]"
-                          : "text-[var(--color-text-secondary)] hover:bg-[var(--color-hover)] hover:scale-[1.02] hover:shadow-sm"
-                      }
-                    `}
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      {icon}
+                  <div key={path} className="flex flex-col">
+                    <div className={`flex items-center rounded-md ${pathname === path ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]" : "hover:bg-[var(--color-hover)] hover:shadow-sm"} transition-all duration-200 ease-in-out`}>
+                      <Link
+                        to={path}
+                        className="flex items-center gap-3 px-3 py-2 text-sm font-medium flex-grow"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {icon}
+                        {!collapsed && (
+                          <span className="transition-opacity duration-200">
+                            {label}
+                          </span>
+                        )}
+                      </Link>
                       {!collapsed && (
-                        <span className="transition-opacity duration-200">
-                          {label}
-                        </span>
+                        <button
+                          onClick={() => toggleExpanded("entries")}
+                          className="pr-3 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
+                          aria-label={expandedItems.entries ? "Contraer movimientos" : "Expandir movimientos"}
+                        >
+                          {expandedItems.entries ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                        </button>
                       )}
-                    </Link>
-                    {!collapsed && (
+                    </div>
+                    {!collapsed && expandedItems.entries && (
                       <Link
                         to="/select-entry"
                         className={`
@@ -211,7 +213,7 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
                         </span>
                       </Link>
                     )}
-                  </React.Fragment>
+                  </div>
                 );
               }
 

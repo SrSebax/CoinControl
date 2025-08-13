@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Layout from "../components/Layout";
-import TabsSwitcher from "../components/TabsSwitcher";
-import PageHeading from "../components/PageHeading";
-import SubmitButton from "../components/SubmitButton";
-import AmountInput from "../components/inputs/AmountInput";
-import NameInput from "../components/inputs/NameInput";
-import SelectInput from "../components/inputs/SelectInput";
-import DateInput from "../components/inputs/DateInput";
-import NoteTextarea from "../components/inputs/NoteTextarea";
-import ConfirmModal from "../components/ConfirmModal";
+import Layout from "../../components/Layout";
+import TabsSwitcher from "../../components/TabsSwitcher";
+import PageHeading from "../../components/PageHeading";
+import SubmitButton from "../../components/SubmitButton";
+import AmountInput from "../../components/inputs/AmountInput";
+import NameInput from "../../components/inputs/NameInput";
+import SelectInput from "../../components/inputs/SelectInput";
+import DateInput from "../../components/inputs/DateInput";
+import NoteTextarea from "../../components/inputs/NoteTextarea";
+import ConfirmModal from "../../components/ConfirmModal";
 import { ArrowDownCircle, ArrowUpCircle, Save } from "lucide-react";
-import { useTransactions } from "../hooks/useLocalStorage";
-import { useCategories } from "../hooks/useCategories";
+import { useTransactions } from "../../hooks/useLocalStorage";
+import { useCategories } from "../../hooks/useCategories";
 
 export default function EditEntryView() {
   const navigate = useNavigate();
@@ -216,14 +216,10 @@ export default function EditEntryView() {
               Icon={Save}
               color={
                 isExpense
-                  ? "bg-[var(--color-expense)] hover:bg-[var(--color-expense-hover)]"
-                  : "bg-[var(--color-income)] hover:bg-[var(--color-income-hover)]"
+                  ? "bg-[var(--color-button-expense)] hover:bg-[var(--color-button-expense-hover)]"
+                  : "bg-[var(--color-button-income)] hover:bg-[var(--color-button-income-hover)]"
               }
-              text={
-                isExpense
-                  ? "text-[var(--color-expense-text)]"
-                  : "text-[var(--color-income-text)]"
-              }
+              text="text-white"
               disabled={!isFormValid || isSubmitting}
               loading={isSubmitting}
             />

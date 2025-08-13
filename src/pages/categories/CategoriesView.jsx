@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Layout from "../components/Layout";
-import TabsSwitcher from "../components/TabsSwitcher";
-import PageHeading from "../components/PageHeading";
-import NameInput from "../components/inputs/NameInput";
-import ColorInput from "../components/inputs/ColorInput";
-import IconInput from "../components/inputs/IconInput";
-import SubmitButton from "../components/SubmitButton";
-import ConfirmModal from "../components/ConfirmModal";
+import Layout from "../../components/Layout";
+import TabsSwitcher from "../../components/TabsSwitcher";
+import PageHeading from "../../components/PageHeading";
+import NameInput from "../../components/inputs/NameInput";
+import ColorInput from "../../components/inputs/ColorInput";
+import IconInput from "../../components/inputs/IconInput";
+import SubmitButton from "../../components/SubmitButton";
+import ConfirmModal from "../../components/ConfirmModal";
 import { Plus } from "lucide-react";
-import { useCategories } from "../hooks/useCategories";
+import { useCategories } from "../../hooks/useCategories";
 
 export default function CategoriesView() {
   // eslint-disable-next-line no-unused-vars
@@ -201,14 +201,10 @@ export default function CategoriesView() {
               Icon={Plus}
               color={
                 isExpense
-                  ? "bg-[var(--color-expense)] hover:bg-[var(--color-expense-hover)]"
-                  : "bg-[var(--color-income)] hover:bg-[var(--color-income-hover)]"
+                  ? "bg-[var(--color-button-expense)] hover:bg-[var(--color-button-expense-hover)]"
+                  : "bg-[var(--color-button-income)] hover:bg-[var(--color-button-income-hover)]"
               }
-              text={
-                isExpense
-                  ? "text-[var(--color-expense-text)]"
-                  : "text-[var(--color-income-text)]"
-              }
+              text="text-white"
               disabled={!isFormValid || isSubmitting}
               loading={isSubmitting}
               sizeClass="w-full"

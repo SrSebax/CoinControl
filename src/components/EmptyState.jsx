@@ -33,7 +33,7 @@ export default function EmptyState({
       <p className="text-gray-500">{message}</p>
       <button
         onClick={() => navigate(buttonPath)}
-        className={`mt-4 px-4 py-2 ${buttonColor} text-white rounded-md transition`}
+        className={`cursor-pointer mt-4 px-4 py-2 ${buttonColor} text-white rounded-md transition hover:opacity-90`}
       >
         {buttonText}
       </button>

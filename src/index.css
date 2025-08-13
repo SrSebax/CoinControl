@@ -41,10 +41,14 @@
   --color-expense: #fee2e2;
   --color-expense-hover: #fecaca;
   --color-expense-text: #991b1b;
+  --color-button-expense: #ef4444;
+  --color-button-expense-hover: #dc2626;
 
   --color-income: #d1fae5;
   --color-income-hover: #a7f3d0;
   --color-income-text: #065f46;
+  --color-button-income: #10b981;
+  --color-button-income-hover: #059669;
 
   --color-disabled: #d1d5db;
 }

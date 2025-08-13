@@ -47,7 +47,7 @@ export default function ColorInput({ value, onChange, label = "Color", name = "c
               key={color.hex}
               type="button"
               onClick={() => handleColorSelect(color.hex)}
-              className={`p-3 rounded-md hover:bg-gray-50 transition-all duration-200 flex items-center ${
+              className={`cursor-pointer p-3 rounded-md hover:bg-gray-50 transition-all duration-200 flex items-center ${
                 color.hex === value ? "bg-[var(--color-primary-light)] ring-2 ring-[var(--color-primary)]" : "border border-gray-200"
               }`}
             >

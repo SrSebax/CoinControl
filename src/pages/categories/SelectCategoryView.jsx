@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Folder } from "lucide-react";
-import Layout from "../components/Layout";
-import PageHeading from "../components/PageHeading";
-import TabsSwitcher from "../components/TabsSwitcher";
-import ConfirmModal from "../components/ConfirmModal";
-import EmptyState from "../components/EmptyState";
-import SelectItemCard from "../components/SelectItemCard";
-import { useCategories } from "../hooks/useCategories";
+import Layout from "../../components/Layout";
+import PageHeading from "../../components/PageHeading";
+import TabsSwitcher from "../../components/TabsSwitcher";
+import ConfirmModal from "../../components/ConfirmModal";
+import EmptyState from "../../components/EmptyState";
+import SelectItemCard from "../../components/SelectItemCard";
+import { useCategories } from "../../hooks/useCategories";
 
 export default function SelectCategoryView() {
   const navigate = useNavigate();
@@ -80,7 +80,7 @@ export default function SelectCategoryView() {
             message={`No has creado ninguna categoría de ${isExpense ? 'gastos' : 'ingresos'} todavía`}
             buttonText="Crear categoría"
             buttonPath="/categories"
-            buttonColor={isExpense ? "bg-[var(--color-expense)]" : "bg-[var(--color-income)]"}
+            buttonColor={isExpense ? "bg-[var(--color-button-expense)]" : "bg-[var(--color-button-income)]"}
           />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PiggyBank } from "lucide-react";
-import Layout from "../components/Layout";
-import PageHeading from "../components/PageHeading";
-import ConfirmModal from "../components/ConfirmModal";
-import EmptyState from "../components/EmptyState";
-import SelectItemCard from "../components/SelectItemCard";
-import { usePockets } from "../hooks/usePockets";
+import Layout from "../../components/Layout";
+import PageHeading from "../../components/PageHeading";
+import ConfirmModal from "../../components/ConfirmModal";
+import EmptyState from "../../components/EmptyState";
+import SelectItemCard from "../../components/SelectItemCard";
+import { usePockets } from "../../hooks/usePockets";
 
 export default function SelectPocketView() {
   const navigate = useNavigate();

@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import Layout from "../components/Layout";
-import TabsSwitcher from "../components/TabsSwitcher";
-import PageHeading from "../components/PageHeading";
-import NameInput from "../components/inputs/NameInput";
-import ColorInput from "../components/inputs/ColorInput";
-import IconInput from "../components/inputs/IconInput";
-import SubmitButton from "../components/SubmitButton";
-import ConfirmModal from "../components/ConfirmModal";
+import Layout from "../../components/Layout";
+import TabsSwitcher from "../../components/TabsSwitcher";
+import PageHeading from "../../components/PageHeading";
+import NameInput from "../../components/inputs/NameInput";
+import ColorInput from "../../components/inputs/ColorInput";
+import IconInput from "../../components/inputs/IconInput";
+import SubmitButton from "../../components/SubmitButton";
+import ConfirmModal from "../../components/ConfirmModal";
 import { Save } from "lucide-react";
 import * as LucideIcons from "lucide-react";
-import { useCategories } from "../hooks/useCategories";
+import { useCategories } from "../../hooks/useCategories";
 
 export default function EditCategoryView() {
   const navigate = useNavigate();
@@ -174,14 +174,10 @@ export default function EditCategoryView() {
               Icon={Save}
               color={
                 isExpense
-                  ? "bg-[var(--color-expense)] hover:bg-[var(--color-expense-hover)]"
-                  : "bg-[var(--color-income)] hover:bg-[var(--color-income-hover)]"
+                  ? "bg-[var(--color-button-expense)] hover:bg-[var(--color-button-expense-hover)]"
+                  : "bg-[var(--color-button-income)] hover:bg-[var(--color-button-income-hover)]"
               }
-              text={
-                isExpense
-                  ? "text-[var(--color-expense-text)]"
-                  : "text-[var(--color-income-text)]"
-              }
+              text="text-white"
               disabled={!isFormValid || isSubmitting}
               loading={isSubmitting}
               sizeClass="w-full"

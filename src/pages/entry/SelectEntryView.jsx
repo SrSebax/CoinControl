@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowDownCircle, ArrowUpCircle } from "lucide-react";
-import Layout from "../components/Layout";
-import PageHeading from "../components/PageHeading";
-import TabsSwitcher from "../components/TabsSwitcher";
-import ConfirmModal from "../components/ConfirmModal";
-import EmptyState from "../components/EmptyState";
-import SelectItemCard from "../components/SelectItemCard";
-import { useTransactions } from "../hooks/useLocalStorage";
+import Layout from "../../components/Layout";
+import PageHeading from "../../components/PageHeading";
+import TabsSwitcher from "../../components/TabsSwitcher";
+import ConfirmModal from "../../components/ConfirmModal";
+import EmptyState from "../../components/EmptyState";
+import SelectItemCard from "../../components/SelectItemCard";
+import { useTransactions } from "../../hooks/useLocalStorage";
 
 export default function SelectEntryView() {
   const navigate = useNavigate();
@@ -129,7 +129,7 @@ export default function SelectEntryView() {
             message={`No has registrado ningún ${isExpense ? 'gasto' : 'ingreso'} todavía`}
             buttonText={`Registrar ${isExpense ? 'gasto' : 'ingreso'}`}
             buttonPath="/new-entry"
-            buttonColor={isExpense ? "bg-[var(--color-expense)]" : "bg-[var(--color-income)]"}
+            buttonColor={isExpense ? "bg-[var(--color-button-expense)]" : "bg-[var(--color-button-income)]"}
             iconColor={isExpense ? "text-[var(--color-expense)]" : "text-[var(--color-income)]"}
           />
         ) : (

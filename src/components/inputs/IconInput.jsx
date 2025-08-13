@@ -70,7 +70,7 @@ export default function IconInput({ value, onChange, label = "Icono", name = "ic
               key={icon.englishName}
               type="button"
               onClick={() => handleIconSelect(icon.englishName)}
-              className={`p-3 rounded-md hover:bg-gray-50 transition-all duration-200 ${
+              className={`cursor-pointer p-3 rounded-md hover:bg-gray-50 transition-all duration-200 ${
                 icon.englishName === value ? "bg-[var(--color-primary-light)] ring-2 ring-[var(--color-primary)]" : "border border-gray-200"
               }`}
             >

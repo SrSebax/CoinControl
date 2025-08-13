@@ -5,17 +5,17 @@ import { auth } from "../services/firebase";
 
 import SplashView from "../pages/SplashView";
 import HomeView from "../pages/HomeView";
-import NewEntryView from "../pages/NewEntryView";
-import EditEntryView from "../pages/EditEntryView";
-import SelectEntryView from "../pages/SelectEntryView";
+import NewEntryView from "../pages/entry/NewEntryView";
+import EditEntryView from "../pages/entry/EditEntryView";
+import SelectEntryView from "../pages/entry/SelectEntryView";
 import NotFoundView from "../pages/NotFoundView";
 import LoginView from "../pages/LoginView";
-import CategoriesView from "../pages/CategoriesView";
-import EditCategoryView from "../pages/EditCategoryView";
-import SelectCategoryView from "../pages/SelectCategoryView";
-import PocketsView from "../pages/PocketsView";
-import EditPocketView from "../pages/EditPocketView";
-import SelectPocketView from "../pages/SelectPocketView";
+import CategoriesView from "../pages/categories/CategoriesView";
+import EditCategoryView from "../pages/categories/EditCategoryView";
+import SelectCategoryView from "../pages/categories/SelectCategoryView";
+import PocketsView from "../pages/pocket/PocketsView";
+import EditPocketView from "../pages/pocket/EditPocketView";
+import SelectPocketView from "../pages/pocket/SelectPocketView";
 
 export default function AppRoutes() {
   const [loading, setLoading] = useState(true);

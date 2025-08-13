@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Layout from "../components/Layout";
-import PageHeading from "../components/PageHeading";
-import IconInput from "../components/inputs/IconInput";
-import ColorInput from "../components/inputs/ColorInput";
-import NameInput from "../components/inputs/NameInput";
-import AmountInput from "../components/inputs/AmountInput";
-import DateInput from "../components/inputs/DateInput";
-import SelectInput from "../components/inputs/SelectInput";
-import SubmitButton from "../components/SubmitButton";
-import ConfirmModal from "../components/ConfirmModal";
+import Layout from "../../components/Layout";
+import PageHeading from "../../components/PageHeading";
+import IconInput from "../../components/inputs/IconInput";
+import ColorInput from "../../components/inputs/ColorInput";
+import NameInput from "../../components/inputs/NameInput";
+import AmountInput from "../../components/inputs/AmountInput";
+import DateInput from "../../components/inputs/DateInput";
+import SelectInput from "../../components/inputs/SelectInput";
+import SubmitButton from "../../components/SubmitButton";
+import ConfirmModal from "../../components/ConfirmModal";
 import { PiggyBank, Save } from "lucide-react";
-import { usePockets } from "../hooks/usePockets";
+import { usePockets } from "../../hooks/usePockets";
 
 export default function EditPocketView() {
   const navigate = useNavigate();
