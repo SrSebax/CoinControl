@@ -14,7 +14,8 @@ export default function AmountInput({
   disabled = false,
   autoFocus = false,
   readOnly = false,
-  currencySymbol = "",
+  currencySymbol = "$",
+  showCurrency = true,
   maxValue,
   minValue
 }) {
@@ -71,8 +72,13 @@ export default function AmountInput({
             error ? "border-red-400" : "border-gray-300"
           } ${disabled ? "bg-gray-100 cursor-not-allowed" : ""} ${
             currencySymbol ? "pl-8" : ""
-          }`}
+          } ${showCurrency ? "pr-14" : ""}`}
         />
+        {showCurrency && (
+          <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">
+            COP
+          </span>
+        )}
       </div>
       {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>

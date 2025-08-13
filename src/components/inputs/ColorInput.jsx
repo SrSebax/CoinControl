@@ -29,7 +29,7 @@ export default function ColorInput({ value, onChange, label = "Color", name = "c
       </label>
       
       {value && (
-        <div className="mb-3 p-2 bg-gray-50 border border-gray-200 rounded-md flex items-center">
+        <div className="mb-3 py-3 px-2 bg-gray-50 border border-gray-200 rounded-md flex items-center">
           <div 
             className="w-6 h-6 rounded-full shadow-sm mr-2" 
             style={{ backgroundColor: value }}
@@ -41,7 +41,7 @@ export default function ColorInput({ value, onChange, label = "Color", name = "c
       )}
       
       <div className="w-full p-3 border border-gray-300 rounded-md bg-white">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2 pb-2 pl-2 pt-2">
+        <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2 pb-2 pl-2 pt-2">
           {colors.map((color) => (
             <button
               key={color.hex}

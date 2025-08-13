@@ -107,7 +107,7 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
                 );
               }
 
-              // Ruta de bolsillos sin opción de editar
+              // Ruta de bolsillos con opción de editar
               if (path === "/pockets") {
                 return (
                   <React.Fragment key={path}>
@@ -118,14 +118,8 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
                       ${
                         pathname === path &&
                         !(
-                          path === "/categories" &&
-                          (pathname === "/select-category" ||
-                            pathname.startsWith("/edit-category/"))
-                        ) &&
-                        !(
-                          path === "/new-entry" &&
-                          (pathname === "/select-entry" ||
-                            pathname.startsWith("/edit-entry/"))
+                          pathname === "/select-pocket" ||
+                          pathname.startsWith("/edit-pocket/")
                         )
                           ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]"
                           : "text-[var(--color-text-secondary)] hover:bg-[var(--color-hover)] hover:scale-[1.02] hover:shadow-sm"
@@ -140,6 +134,26 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
                         </span>
                       )}
                     </Link>
+                    {!collapsed && (
+                      <Link
+                        to="/select-pocket"
+                        className={`
+                        flex items-center gap-3 px-3 py-2 ml-4 rounded-md text-sm font-medium transition-all duration-200 ease-in-out
+                        ${
+                          pathname === "/select-pocket" ||
+                          pathname.startsWith("/edit-pocket/")
+                            ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md scale-[1.02]"
+                            : "text-[var(--color-text-secondary)] hover:bg-[var(--color-hover)] hover:scale-[1.02] hover:shadow-sm"
+                        }
+                      `}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        <Edit size={18} />
+                        <span className="transition-opacity duration-200">
+                          Editar Bolsillo
+                        </span>
+                      </Link>
+                    )}
                   </React.Fragment>
                 );
               }

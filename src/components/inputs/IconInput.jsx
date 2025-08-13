@@ -47,7 +47,7 @@ export default function IconInput({ value, onChange, label = "Icono", name = "ic
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full flex flex-col">
       <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-2">
         {label}
       </label>
@@ -63,7 +63,7 @@ export default function IconInput({ value, onChange, label = "Icono", name = "ic
         </div>
       )}
       
-      <div className="w-full p-3 border border-gray-300 rounded-md bg-white">
+      <div className="w-full p-3 border border-gray-300 rounded-md bg-white flex-grow">
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-2 pb-2 pl-2 pt-2">
           {icons.map((icon) => (
             <button
