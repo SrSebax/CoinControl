@@ -12,12 +12,13 @@ import NoteTextarea from "../components/inputs/NoteTextarea";
 import ConfirmModal from "../components/ConfirmModal";
 import { ArrowDownCircle, ArrowUpCircle } from "lucide-react";
 import { useTransactions } from "../hooks/useLocalStorage";
-import { expenseCategories, incomeCategories } from "../data/data";
+import { useCategories } from "../hooks/useCategories";
 
 export default function NewEntryView() {
   const navigate = useNavigate();
   const location = useLocation();
   const { addTransaction, updateTransaction } = useTransactions();
+  const { getCategoriesByType } = useCategories();
   
   // Verificar si estamos editando una transacción existente
   const isEditing = location.state?.isEditing || false;
@@ -162,9 +163,10 @@ export default function NewEntryView() {
     }
   }, [formData.date]);
 
-  const categorias = isExpense ? expenseCategories : incomeCategories;
+  // Obtener las categorías según el tipo seleccionado
+  const categorias = getCategoriesByType(isExpense ? 'expense' : 'income');
 
-    return (
+  return (
     <Layout>
       <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 space-y-6">
         <div className="text-center sm:text-left">
@@ -203,6 +205,7 @@ export default function NewEntryView() {
               placeholder="Selecciona una categoría"
               onAddNew={() => handleAddNewCategory()}
               addNewLabel="Agregar categoría"
+              isObjectOptions={true}
             />
 
             <DateInput

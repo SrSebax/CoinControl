@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Plus } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 
 export default function SelectInput({ 
   options, 
@@ -11,10 +12,12 @@ export default function SelectInput({
   name = "select", 
   placeholder = "Selecciona una opción",
   onAddNew = null,
-  addNewLabel = "Agregar nuevo"
+  addNewLabel = "Agregar nuevo",
+  isObjectOptions = false
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState("");
+  const [selectedOption, setSelectedOption] = useState(null);
   const dropdownRef = useRef(null);
   
   // Cerrar el menú al hacer clic fuera
@@ -33,28 +36,53 @@ export default function SelectInput({
   useEffect(() => {
     if (!value) {
       setSelectedLabel("");
+      setSelectedOption(null);
       return;
     }
     
-    const selectedOption = options.find(opt => opt.toLowerCase() === value);
-    if (selectedOption) {
-      setSelectedLabel(selectedOption);
+    if (isObjectOptions) {
+      const selected = options.find(opt => opt.id === value);
+      if (selected) {
+        setSelectedLabel(selected.name);
+        setSelectedOption(selected);
+      } else {
+        setSelectedLabel("");
+        setSelectedOption(null);
+      }
     } else {
-      // Si el valor actual no está en las opciones disponibles, limpiamos la selección
-      setSelectedLabel("");
-      // Opcionalmente, podríamos también limpiar el valor si no está en las opciones:
-      // if (onChange) {
-      //   onChange({ target: { name, value: "" } });
-      // }
+      const selected = options.find(opt => 
+        typeof opt === 'string' ? opt.toLowerCase() === value : false
+      );
+      if (selected) {
+        setSelectedLabel(selected);
+        setSelectedOption(selected);
+      } else {
+        setSelectedLabel("");
+        setSelectedOption(null);
+      }
     }
-  }, [value, options, name]);
+  }, [value, options, isObjectOptions]);
   
   const handleSelect = (option) => {
-    onChange({ target: { name, value: option.toLowerCase() } });
-    setSelectedLabel(option);
+    if (isObjectOptions) {
+      onChange({ target: { name, value: option.id } });
+      setSelectedLabel(option.name);
+      setSelectedOption(option);
+    } else {
+      onChange({ target: { name, value: option.toLowerCase() } });
+      setSelectedLabel(option);
+      setSelectedOption(option);
+    }
+    
     setIsOpen(false);
+    
     if (onBlur) {
-      onBlur({ target: { name, value: option.toLowerCase() } });
+      onBlur({ 
+        target: { 
+          name, 
+          value: isObjectOptions ? option.id : option.toLowerCase() 
+        } 
+      });
     }
   };
   
@@ -64,6 +92,20 @@ export default function SelectInput({
     if (onAddNew && typeof onAddNew === 'function') {
       onAddNew();
     }
+  };
+
+  // Renderizar el icono si existe
+  const renderIcon = (option) => {
+    if (!isObjectOptions || !option.icon) return null;
+    
+    const IconComponent = LucideIcons[option.icon];
+    if (!IconComponent) return null;
+    
+    return (
+      <div className="mr-2" style={{ color: option.color || 'currentColor' }}>
+        <IconComponent size={18} />
+      </div>
+    );
   };
 
   return (
@@ -79,9 +121,12 @@ export default function SelectInput({
           error ? "border-red-400" : "border-gray-300"
         }`}
       >
-        <span className={selectedLabel ? "text-gray-800" : "text-gray-400"}>
-          {selectedLabel || placeholder}
-        </span>
+        <div className="flex items-center">
+          {selectedOption && isObjectOptions && renderIcon(selectedOption)}
+          <span className={selectedLabel ? "text-gray-800" : "text-gray-400"}>
+            {selectedLabel || placeholder}
+          </span>
+        </div>
         <ChevronDown
           size={18}
           className={`text-gray-500 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`}
@@ -93,17 +138,24 @@ export default function SelectInput({
         <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg py-1 max-h-60 overflow-y-auto">
           {options.length > 0 ? (
             <>
-              {options.map((option) => (
-                <div
-                  key={option}
-                  onClick={() => handleSelect(option)}
-                  className={`px-4 py-2.5 text-sm cursor-pointer hover:bg-gray-100 transition-colors ${
-                    value === option.toLowerCase() ? "bg-gray-50 text-[var(--color-primary)] font-medium" : "text-gray-700"
-                  }`}
-                >
-                  {option}
-                </div>
-              ))}
+              {options.map((option) => {
+                const optionValue = isObjectOptions ? option.id : option.toLowerCase();
+                const optionLabel = isObjectOptions ? option.name : option;
+                const isSelected = value === optionValue;
+                
+                return (
+                  <div
+                    key={optionValue}
+                    onClick={() => handleSelect(option)}
+                    className={`px-4 py-2.5 text-sm cursor-pointer hover:bg-gray-100 transition-colors flex items-center ${
+                      isSelected ? "bg-gray-50 text-[var(--color-primary)] font-medium" : "text-gray-700"
+                    }`}
+                  >
+                    {isObjectOptions && renderIcon(option)}
+                    {optionLabel}
+                  </div>
+                );
+              })}
               
               {/* Opción para agregar nueva categoría */}
               {onAddNew && (
@@ -134,11 +186,16 @@ export default function SelectInput({
         className="sr-only"
       >
         <option value="">{placeholder}</option>
-        {options.map((opt) => (
-          <option key={opt} value={opt.toLowerCase()}>
-            {opt}
-          </option>
-        ))}
+        {options.map((opt) => {
+          const optionValue = isObjectOptions ? opt.id : (typeof opt === 'string' ? opt.toLowerCase() : opt);
+          const optionLabel = isObjectOptions ? opt.name : opt;
+          
+          return (
+            <option key={optionValue} value={optionValue}>
+              {optionLabel}
+            </option>
+          );
+        })}
       </select>
     </div>
   );

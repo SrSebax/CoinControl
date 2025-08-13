@@ -1,19 +1,337 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import TabsSwitcher from "../components/TabsSwitcher";
 import PageHeading from "../components/PageHeading";
+import NameInput from "../components/inputs/NameInput";
+import ColorInput from "../components/inputs/ColorInput";
+import IconInput from "../components/inputs/IconInput";
+import SubmitButton from "../components/SubmitButton";
+import ConfirmModal from "../components/ConfirmModal";
+import { Plus, Edit2, Trash2, Search, X } from "lucide-react";
+import * as LucideIcons from "lucide-react";
+import { useCategories } from "../hooks/useCategories";
 
 export default function CategoriesView() {
+  // eslint-disable-next-line no-unused-vars
+  const navigate = useNavigate();
+  const { categories, addCategory, deleteCategory, updateCategory } = useCategories();
+  
   const [activeTab, setActiveTab] = useState("gastos");
+  const isExpense = activeTab === "gastos";
+  const typeKey = isExpense ? "expense" : "income";
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    color: "",
+    icon: ""
+  });
+  
+  const [touched, setTouched] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  
+  const [confirmModal, setConfirmModal] = useState({
+    open: false,
+    title: "",
+    message: "",
+    data: null,
+    action: ""
+  });
+  
+  // Estado para la búsqueda
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  // Lista de categorías según el tipo activo
+  const categoryList = useMemo(() => categories[typeKey] || [], [categories, typeKey]);
+  
+  // Lista filtrada según el término de búsqueda
+  const filteredCategories = useMemo(() => {
+    if (!searchTerm.trim()) return categoryList;
+    return categoryList.filter(category => 
+      category.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [categoryList, searchTerm]);
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  
+  const isEmpty = (field) =>
+    touched[field] && (!formData[field] || formData[field].trim() === "");
+  
+  const isFormValid = formData.name && formData.color && formData.icon;
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!isFormValid) return;
+    
+    const categoryData = {
+      type: typeKey,
+      name: formData.name.trim(),
+      color: formData.color,
+      icon: formData.icon
+    };
+    
+    // Mostrar modal de confirmación
+    setConfirmModal({
+      open: true,
+      title: isEditing ? "¿Actualizar categoría?" : "¿Guardar categoría?",
+      message: isEditing 
+        ? "¿Estás seguro de actualizar esta categoría?"
+        : "¿Estás seguro de guardar esta categoría?",
+      data: categoryData,
+      action: isEditing ? "update" : "add"
+    });
+  };
+  
+  const handleConfirmSubmit = async () => {
+    setIsSubmitting(true);
+    
+    try {
+      if (confirmModal.action === "update" && editingId) {
+        // Actualizar categoría existente
+        updateCategory(editingId, typeKey, confirmModal.data);
+        
+        // Mostrar mensaje de éxito
+        // Aquí podrías implementar un sistema de notificaciones
+      } else if (confirmModal.action === "add") {
+        // Crear nueva categoría
+        addCategory(confirmModal.data);
+        
+        // Mostrar mensaje de éxito
+        // Aquí podrías implementar un sistema de notificaciones
+      } else if (confirmModal.action === "delete" && confirmModal.data) {
+        // Eliminar categoría
+        deleteCategory(confirmModal.data, typeKey);
+        
+        // Mostrar mensaje de éxito
+        // Aquí podrías implementar un sistema de notificaciones
+      }
+      
+      // Limpiar formulario
+      resetForm();
+    } catch (error) {
+      console.error('Error al procesar la categoría:', error);
+      // Aquí podrías mostrar un mensaje de error
+    } finally {
+      setIsSubmitting(false);
+      setConfirmModal({ open: false, title: "", message: "", data: null, action: "" });
+    }
+  };
+  
+  const handleCancelSubmit = () => {
+    setConfirmModal({ open: false, title: "", message: "", data: null, action: "" });
+  };
+  
+  const handleEditCategory = (category) => {
+    setFormData({
+      name: category.name,
+      color: category.color,
+      icon: category.icon
+    });
+    setIsEditing(true);
+    setEditingId(category.id);
+  };
+  
+  const handleDeleteCategory = (categoryId) => {
+    setConfirmModal({
+      open: true,
+      title: "¿Eliminar categoría?",
+      message: "¿Estás seguro de eliminar esta categoría? Esta acción no se puede deshacer.",
+      data: categoryId,
+      action: "delete"
+    });
+  };
+  
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      color: "",
+      icon: ""
+    });
+    setTouched({});
+    setIsEditing(false);
+    setEditingId(null);
+  };
+  
+  const handleTabChange = (newTab) => {
+    setActiveTab(newTab);
+    resetForm();
+    setSearchTerm("");
+  };
+  
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+  
+  const clearSearch = () => {
+    setSearchTerm("");
+  };
+
+  // Función para renderizar el icono de la categoría
+  const renderCategoryIcon = (iconName) => {
+    if (!iconName || !LucideIcons[iconName]) return null;
+    const IconComponent = LucideIcons[iconName];
+    return <IconComponent size={24} />;
+  };
 
   return (
     <Layout>
       <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 space-y-6">
         <div className="text-center sm:text-left">
-          <PageHeading title="Registrar nueva categoría" />
-          <TabsSwitcher activeTab={activeTab} setActiveTab={setActiveTab} />
+          <PageHeading title={isEditing ? "Editar categoría" : "Registrar nueva categoría"} />
+          <TabsSwitcher activeTab={activeTab} setActiveTab={handleTabChange} />
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex flex-col space-y-6">
+            <NameInput
+              value={formData.name}
+              onChange={handleChange}
+              onBlur={() => setTouched((prev) => ({ ...prev, name: true }))}
+              error={isEmpty("name")}
+              label="Nombre de categoría"
+              placeholder="Ej: Salud"
+            />
+            
+            <ColorInput
+              value={formData.color}
+              onChange={handleChange}
+              onBlur={() => setTouched((prev) => ({ ...prev, color: true }))}
+              error={isEmpty("color")}
+            />
+            
+            <IconInput
+              value={formData.icon}
+              onChange={handleChange}
+              onBlur={() => setTouched((prev) => ({ ...prev, icon: true }))}
+              error={isEmpty("icon")}
+            />
+          </div>
+          
+          <div className="flex flex-col w-full">
+            {isEditing && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="mb-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                Cancelar
+              </button>
+            )}
+            
+            <SubmitButton
+              label={isEditing ? "Actualizar categoría" : "Guardar categoría"}
+              Icon={Plus}
+              color={
+                isExpense
+                  ? "bg-[var(--color-expense)] hover:bg-[var(--color-expense-hover)]"
+                  : "bg-[var(--color-income)] hover:bg-[var(--color-income-hover)]"
+              }
+              text={
+                isExpense
+                  ? "text-[var(--color-expense-text)]"
+                  : "text-[var(--color-income-text)]"
+              }
+              disabled={!isFormValid || isSubmitting}
+              loading={isSubmitting}
+              sizeClass="w-full"
+            />
+          </div>
+        </form>
+        
+        {/* Lista de categorías */}
+        <div className="mt-6 border border-gray-100 rounded-lg shadow-sm">
+          <div className="sticky top-0 z-10">
+            <h3 className="text-md font-medium text-gray-900 p-3 bg-gray-50 border-b">
+              {isExpense ? "Categorías de gastos" : "Categorías de ingresos"} ({categoryList.length})
+            </h3>
+            
+            {/* Campo de búsqueda */}
+            <div className="relative p-2 bg-white border-b">
+              <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                <div className="pl-3 text-gray-400">
+                  <Search size={16} />
+                </div>
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  placeholder="Buscar categoría..."
+                  className="w-full py-2 px-2 text-sm focus:outline-none"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={clearSearch}
+                    className="pr-3 text-gray-400 hover:text-gray-600"
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          <div className="max-h-[240px] overflow-y-auto">
+            {categoryList.length === 0 ? (
+              <p className="text-gray-500 italic p-4 text-center text-sm">No hay categorías registradas</p>
+            ) : filteredCategories.length === 0 ? (
+              <p className="text-gray-500 italic p-4 text-center text-sm">No se encontraron resultados para "{searchTerm}"</p>
+            ) : (
+              <ul className="divide-y divide-gray-100">
+                {filteredCategories.map((category) => (
+                <li 
+                  key={category.id}
+                  className="flex items-center justify-between py-2 px-3 hover:bg-gray-50 transition-colors"
+                  style={{ borderLeftColor: category.color, borderLeftWidth: '3px' }}
+                >
+                  <div className="flex items-center">
+                    {category.icon && (
+                      <div className="mr-2 flex-shrink-0" style={{ color: category.color }}>
+                        {renderCategoryIcon(category.icon)}
+                      </div>
+                    )}
+                    <span className="font-medium text-sm">{category.name}</span>
+                  </div>
+                  
+                  <div className="flex space-x-1">
+                    <button
+                      type="button"
+                      onClick={() => handleEditCategory(category)}
+                      className="p-1 text-gray-500 hover:text-blue-600 focus:outline-none"
+                      aria-label="Editar"
+                    >
+                      <Edit2 size={16} />
+                    </button>
+                    
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteCategory(category.id)}
+                      className="p-1 text-gray-500 hover:text-red-600 focus:outline-none"
+                      aria-label="Eliminar"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
+      
+      {/* Modal de confirmación */}
+      <ConfirmModal
+        open={confirmModal.open}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={handleConfirmSubmit}
+        onCancel={handleCancelSubmit}
+      />
     </Layout>
   );
 }
