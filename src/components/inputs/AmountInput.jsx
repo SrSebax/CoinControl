@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export default function AmountInput({ 
   value, 
@@ -20,11 +20,11 @@ export default function AmountInput({
 }) {
   const [amountFormatted, setAmountFormatted] = useState("");
 
-  const formatToCurrency = (value) => {
+  const formatToCurrency = useCallback((value) => {
     const number = parseFloat(value.replace(/[.,]/g, ""));
     if (isNaN(number)) return "";
     return number.toLocaleString(locale);
-  };
+  }, [locale]);
 
   const handleAmountChange = (e) => {
     const rawValue = e.target.value.replace(/[^\d]/g, "");
@@ -43,7 +43,7 @@ export default function AmountInput({
 
   useEffect(() => {
     if (value) setAmountFormatted(formatToCurrency(value));
-  }, [value, locale]);
+  }, [value, locale, formatToCurrency]);
 
   return (
     <div className={className}>

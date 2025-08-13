@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export function useLocalStorage(key, initialValue) {
   // Obtener el valor inicial del localStorage o usar el valor por defecto
@@ -98,7 +98,7 @@ export function useTransactions() {
   };
 
   // Obtener transacciones por período (mes actual)
-  const getTransactionsByPeriod = (period = 'current') => {
+  const getTransactionsByPeriod = () => {
     const now = new Date();
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
