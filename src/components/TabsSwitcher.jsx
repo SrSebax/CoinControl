@@ -7,7 +7,11 @@ export default function TabsSwitcher({ activeTab, setActiveTab }) {
   return (
     <div className="inline-flex p-1 bg-gray-100/80 backdrop-blur-sm rounded-xl shadow-inner mb-8 transition-all duration-300 hover:shadow">
       <button
-        onClick={() => setActiveTab("gastos")}
+        onClick={(e) => {
+          e.preventDefault(); // Evitar envío del formulario
+          setActiveTab("gastos");
+        }}
+        type="button" // Especificar que es un botón tipo button para evitar envío del formulario
         className={`px-5 py-2 rounded-xl flex items-center gap-2 text-sm font-medium transition-all duration-200 ${
           isGastos
             ? "text-red-800 shadow-md"
@@ -26,7 +30,11 @@ export default function TabsSwitcher({ activeTab, setActiveTab }) {
         Gastos
       </button>
       <button
-        onClick={() => setActiveTab("ingresos")}
+        onClick={(e) => {
+          e.preventDefault(); // Evitar envío del formulario
+          setActiveTab("ingresos");
+        }}
+        type="button" // Especificar que es un botón tipo button para evitar envío del formulario
         className={`px-5 py-2 rounded-xl flex items-center gap-2 text-sm font-medium transition-all duration-200 ${
           isIngresos
             ? "text-green-800 shadow-md"

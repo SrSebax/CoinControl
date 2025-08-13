@@ -76,6 +76,21 @@ export function useTransactions() {
     const newSummary = calculateSummary(newTransactions);
     setSummary(newSummary);
   };
+  
+  // Actualizar transacción existente
+  const updateTransaction = (transactionId, updatedData) => {
+    const newTransactions = transactions.map(t => 
+      t.id === transactionId ? { ...t, ...updatedData } : t
+    );
+    
+    setTransactions(newTransactions);
+    
+    // Actualizar resumen
+    const newSummary = calculateSummary(newTransactions);
+    setSummary(newSummary);
+    
+    return newTransactions.find(t => t.id === transactionId);
+  };
 
   // Obtener transacciones por tipo
   const getTransactionsByType = (type) => {
@@ -100,6 +115,7 @@ export function useTransactions() {
     summary,
     addTransaction,
     deleteTransaction,
+    updateTransaction,
     getTransactionsByType,
     getTransactionsByPeriod,
     calculateSummary
