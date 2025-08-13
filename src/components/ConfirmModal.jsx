@@ -1,11 +1,10 @@
 import React from "react";
+import ModalPortal from "./ModalPortal";
 
 export default function ConfirmModal({ open, title, message, onConfirm, onCancel }) {
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm px-4">
-      <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-2xl p-6 animate-fade-in">
+    <ModalPortal isOpen={open}>
+      <div className="w-full max-w-md mx-auto bg-white border border-gray-200 rounded-2xl shadow-2xl p-6 animate-fade-in">
         {/* Título */}
         <h2 className="text-xl font-extrabold text-teal-600 mb-1">{title}</h2>
 
@@ -28,6 +27,6 @@ export default function ConfirmModal({ open, title, message, onConfirm, onCancel
           </button>
         </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 }

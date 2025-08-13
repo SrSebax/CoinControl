@@ -194,12 +194,12 @@ export default function LoginView() {
           <p>
             Desarrollado por{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-blue-500 font-semibold">
-              Sebastian Londoño 🧑‍💻
+              Sebastian Londoño 
             </span>
           </p>
           <p>
             Diseñado por{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-blue-500 font-semibold">Ana Naranjo 🎨</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-blue-500 font-semibold">Ana Naranjo </span>
           </p>
         </div>
       </div>

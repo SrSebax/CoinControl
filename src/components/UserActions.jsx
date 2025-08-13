@@ -148,7 +148,9 @@ export default function UserActions() {
         open={showLogoutModal}
         title="¿Cerrar sesión?"
         message="¿Estás seguro que deseas cerrar tu sesión?"
-        onCancel={() => setShowLogoutModal(false)}
+        onCancel={() => {
+          setShowLogoutModal(false);
+        }}
         onConfirm={() => {
           logout();
           setShowLogoutModal(false);
