@@ -12,7 +12,7 @@ export default function TabsSwitcher({ activeTab, setActiveTab }) {
           setActiveTab("gastos");
         }}
         type="button" // Especificar que es un botón tipo button para evitar envío del formulario
-        className={`px-5 py-2 rounded-xl flex items-center gap-2 text-sm font-medium transition-all duration-200 ${
+        className={`cursor-pointer px-5 py-2 rounded-xl flex items-center gap-2 text-sm font-medium transition-all duration-200 ${
           isGastos
             ? "text-red-800 shadow-md"
             : "text-gray-600 hover:text-red-700 hover:shadow-sm"
@@ -35,7 +35,7 @@ export default function TabsSwitcher({ activeTab, setActiveTab }) {
           setActiveTab("ingresos");
         }}
         type="button" // Especificar que es un botón tipo button para evitar envío del formulario
-        className={`px-5 py-2 rounded-xl flex items-center gap-2 text-sm font-medium transition-all duration-200 ${
+        className={`cursor-pointer px-5 py-2 rounded-xl flex items-center gap-2 text-sm font-medium transition-all duration-200 ${
           isIngresos
             ? "text-green-800 shadow-md"
             : "text-gray-600 hover:text-green-700 hover:shadow-sm"

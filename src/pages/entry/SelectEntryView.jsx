@@ -6,7 +6,7 @@ import PageHeading from "../../components/PageHeading";
 import TabsSwitcher from "../../components/TabsSwitcher";
 import ConfirmModal from "../../components/ConfirmModal";
 import EmptyState from "../../components/EmptyState";
-import SelectItemCard from "../../components/SelectItemCard";
+import EntryCard from "../../components/EntryCard";
 import { useTransactions } from "../../hooks/useLocalStorage";
 
 export default function SelectEntryView() {
@@ -85,27 +85,27 @@ export default function SelectEntryView() {
     return (
       <>
         {entry.note && (
-          <p className="text-sm text-gray-600 mt-2">{entry.note}</p>
+          <p className="text-sm text-gray-600 italic">{entry.note}</p>
         )}
       </>
     );
   };
 
-  // Modificar los datos de entrada para que sean compatibles con SelectItemCard
+  // Modificar los datos de entrada para que sean compatibles con EntryCard
   const prepareEntryData = (entry) => {
     return {
       ...entry,
       // Añadir información adicional para mostrar en el título
       titleInfo: (
-        <p className="text-sm text-gray-500">
-          {formatDate(entry.date)} • {entry.category}
+        <p className="text-sm text-gray-500 flex items-center gap-1">
+          <span className="font-medium">{formatDate(entry.date)}</span>
+          <span className="text-gray-400">•</span>
+          <span>{entry.category}</span>
         </p>
       ),
       // Añadir información adicional para mostrar a la derecha
       rightContent: (
-        <span className={`font-medium ${
-          isExpense ? 'text-[var(--color-expense)]' : 'text-[var(--color-income)]'
-        }`}>
+        <span>
           {formatCurrency(entry.amount)}
         </span>
       ),
@@ -133,12 +133,12 @@ export default function SelectEntryView() {
             iconColor={isExpense ? "text-[var(--color-expense)]" : "text-[var(--color-income)]"}
           />
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {filteredTransactions.map((entry) => {
               const preparedEntry = prepareEntryData(entry);
               
               return (
-                <SelectItemCard
+                <EntryCard
                   key={entry.id}
                   item={preparedEntry}
                   onEdit={handleEditEntry}
@@ -146,7 +146,7 @@ export default function SelectEntryView() {
                   renderContent={entry.note ? renderEntryContent : null}
                   defaultIconName={isExpense ? "ArrowDownCircle" : "ArrowUpCircle"}
                   defaultColor={isExpense ? "var(--color-expense)" : "var(--color-income)"}
-                  showRightContent={true}
+                  isExpense={isExpense}
                 />
               );
             })}

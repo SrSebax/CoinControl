@@ -10,7 +10,7 @@ import DateInput from "../../components/inputs/DateInput";
 import SelectInput from "../../components/inputs/SelectInput";
 import SubmitButton from "../../components/SubmitButton";
 import ConfirmModal from "../../components/ConfirmModal";
-import { PiggyBank } from "lucide-react";
+import { PiggyBank, Plus } from "lucide-react";
 import { usePockets } from "../../hooks/usePockets";
 
 export default function PocketsView() {
@@ -321,6 +321,7 @@ export default function PocketsView() {
           <div className="pt-4">
             <SubmitButton
               label="Guardar bolsillo"
+              Icon={Plus}
               color="bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)]"
               text="text-white"
               disabled={!isFormValid}
