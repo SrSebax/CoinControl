@@ -16,6 +16,7 @@ import SelectCategoryView from "../pages/categories/SelectCategoryView";
 import PocketsView from "../pages/pocket/PocketsView";
 import EditPocketView from "../pages/pocket/EditPocketView";
 import SelectPocketView from "../pages/pocket/SelectPocketView";
+import ConfigurationView from "../pages/ConfigurationView";
 
 export default function AppRoutes() {
   const [loading, setLoading] = useState(true);
@@ -92,6 +93,12 @@ export default function AppRoutes() {
       <Route
         path="/edit-pocket/:pocketId"
         element={user ? <EditPocketView /> : <Navigate to="/" replace />}
+      />
+      
+      {/* Ruta de Configuración */}
+      <Route
+        path="/settings"
+        element={user ? <ConfigurationView /> : <Navigate to="/" replace />}
       />
       
       {/* Login pública */}

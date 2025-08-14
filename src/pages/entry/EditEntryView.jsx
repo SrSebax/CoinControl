@@ -13,6 +13,8 @@ import ConfirmModal from "../../components/ConfirmModal";
 import { ArrowDownCircle, ArrowUpCircle, Save } from "lucide-react";
 import { useTransactions } from "../../hooks/useLocalStorage";
 import { useCategories } from "../../hooks/useCategories";
+import CancelButton from "../../components/CancelButton";
+
 
 export default function EditEntryView() {
   const navigate = useNavigate();
@@ -203,13 +205,10 @@ export default function EditEntryView() {
           <NoteTextarea value={formData.note} onChange={handleChange} />
 
           <div className="flex flex-col w-full space-y-2">
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Cancelar
-            </button>
+          <CancelButton
+                onClick={handleCancel}
+                sizeClass="w-full mb-2"
+              />
             
             <SubmitButton
               label={isExpense ? "Actualizar gasto" : "Actualizar ingreso"}

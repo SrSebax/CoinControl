@@ -7,6 +7,7 @@ import NameInput from "../../components/inputs/NameInput";
 import ColorInput from "../../components/inputs/ColorInput";
 import IconInput from "../../components/inputs/IconInput";
 import SubmitButton from "../../components/SubmitButton";
+import CancelButton from "../../components/CancelButton";
 import ConfirmModal from "../../components/ConfirmModal";
 import { Plus } from "lucide-react";
 import { useCategories } from "../../hooks/useCategories";
@@ -187,13 +188,10 @@ export default function CategoriesView() {
 
           <div className="flex flex-col w-full">
             {isEditing && (
-              <button
-                type="button"
+              <CancelButton
                 onClick={resetForm}
-                className="mb-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                Cancelar
-              </button>
+                sizeClass="w-full mb-2"
+              />
             )}
 
             <SubmitButton

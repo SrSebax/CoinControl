@@ -1,13 +1,14 @@
 // src/components/TabPanelContent.jsx
 import { useState } from "react";
-import { PlusCircle, Trash2, Edit } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTransactions } from "../hooks/useLocalStorage";
 import ConfirmModal from "./ConfirmModal";
+import TransactionGroup from "./TransactionGroup";
 
 export default function TabPanelContent({ activeTab }) {
   const navigate = useNavigate();
-  const { getTransactionsByPeriod, deleteTransaction } = useTransactions();
+  const { deleteTransaction } = useTransactions();
 
   const [confirmModal, setConfirmModal] = useState({
     open: false,
@@ -19,13 +20,35 @@ export default function TabPanelContent({ activeTab }) {
   const isExpense = activeTab === "gastos";
   const title = isExpense ? "Tus Gastos" : "Tus Ingresos";
   const description = isExpense
-    ? "Aquí se mostrarán los gastos del periodo seleccionado."
-    : "Aquí se mostrarán los ingresos del periodo seleccionado.";
-
-  // Obtener transacciones del mes actual por tipo
-  const currentTransactions = getTransactionsByPeriod().filter((t) =>
-    isExpense ? t.type === "expense" : t.type === "income"
+    ? "Aquí se mostrarán los gastos recientes."
+    : "Aquí se mostrarán los ingresos recientes.";
+    
+  // Obtener todas las transacciones del tipo actual
+  const { transactions } = useTransactions();
+  const currentTransactions = transactions.filter(
+    (t) => isExpense ? t.type === "expense" : t.type === "income"
   );
+  
+  // Agrupar transacciones por fecha
+  const groupedTransactions = currentTransactions.reduce((groups, transaction) => {
+    const date = new Date(transaction.date);
+    const dateKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+
+    if (!groups[dateKey]) {
+      groups[dateKey] = {
+        date: transaction.date,
+        items: [],
+      };
+    }
+
+    groups[dateKey].items.push(transaction);
+    return groups;
+  }, {});
+
+  // Convertir el objeto agrupado a un array ordenado por fecha (más reciente primero)
+  const transactionsByDate = Object.values(groupedTransactions).sort((a, b) => {
+    return new Date(b.date) - new Date(a.date);
+  });
 
   const redirectToForm = () => {
     navigate("/new-entry", {
@@ -74,13 +97,28 @@ export default function TabPanelContent({ activeTab }) {
   const formatCurrency = (value) =>
     `$${value.toLocaleString("es-CO", { minimumFractionDigits: 2 })}`;
 
-  const formatDate = (dateString) => {
+  // Formatear fecha para encabezados de grupo
+  const formatDateHeader = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("es-CO", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (date.toDateString() === today.toDateString()) {
+      return "Hoy";
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return "Ayer";
+    } else {
+      return date.toLocaleDateString("es-ES", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year:
+          date.getFullYear() !== today.getFullYear() ? "numeric" : undefined,
+      });
+    }
   };
 
   return (
@@ -102,82 +140,26 @@ export default function TabPanelContent({ activeTab }) {
 
       <p className="text-sm text-gray-600">{description}</p>
 
-      {/* Lista de transacciones */}
+      {/* Lista de transacciones agrupadas por fecha */}
       {currentTransactions.length > 0 ? (
-        <div className="mt-6 space-y-3">
-          {currentTransactions.map((transaction) => (
-            <div
-              key={transaction.id}
-              className={`flex items-center justify-between p-4 rounded-lg border shadow-sm hover:shadow-md transition-all duration-200 ${
-                isExpense
-                  ? "bg-red-50/50 border-red-100 hover:bg-red-50"
-                  : "bg-green-50/50 border-green-100 hover:bg-green-50"
-              }`}
-            >
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-gray-800 text-lg">
-                    {transaction.name || "Sin nombre"}
-                  </h4>
-                  <span
-                    className={`font-bold text-lg ${
-                      isExpense ? "text-red-600" : "text-green-600"
-                    }`}
-                  >
-                    {isExpense ? "-" : "+"}
-                    {formatCurrency(transaction.amount)}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between mt-1">
-                  <div>
-                    <span className="text-sm text-gray-500">
-                      {transaction.category || "Sin categoría"}
-                    </span>
-                    {transaction.note && (
-                      <p className="text-xs text-gray-400 mt-1 italic">
-                        {transaction.note}
-                      </p>
-                    )}
-                  </div>
-                  <span className="text-sm text-gray-500">
-                    {formatDate(transaction.date)}
-                  </span>
-                </div>
-              </div>
-              <div className="flex ml-3">
-                {/* Botón Editar */}
-                <div className="relative group">
-                  <button
-                    onClick={() => handleEditTransaction(transaction)}
-                    className="cursor-pointer p-2 text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] hover:bg-teal-50 rounded-full transition-colors shadow-sm hover:shadow"
-                  >
-                    <Edit size={18} />
-                  </button>
-                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
-                    Editar transacción
-                  </span>
-                </div>
-
-                {/* Botón Eliminar */}
-                <div className="relative group ml-1">
-                  <button
-                    onClick={() => handleDeleteClick(transaction)}
-                    className="cursor-pointer p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors shadow-sm hover:shadow"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
-                    Eliminar transacción
-                  </span>
-                </div>
-              </div>
-            </div>
+        <div className="mt-6 space-y-6">
+          {transactionsByDate.map((group, index) => (
+            <TransactionGroup
+              key={index}
+              group={group}
+              isExpense={isExpense}
+              formatDateHeader={formatDateHeader}
+              formatCurrency={formatCurrency}
+              onEdit={handleEditTransaction}
+              onDelete={handleDeleteClick}
+            />
           ))}
         </div>
       ) : (
         <div className="mt-6 text-center py-8">
           <p className="text-gray-500 text-sm">
-            No hay {isExpense ? "gastos" : "ingresos"} registrados este mes.
+            No hay {isExpense ? "gastos" : "ingresos"} registrados en este
+            periodo.
           </p>
           <p className="text-gray-400 text-xs mt-1">
             Haz clic en "Agregar" para registrar tu primer{" "}

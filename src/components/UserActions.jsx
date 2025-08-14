@@ -50,7 +50,7 @@ export default function UserActions() {
         {/* Botón de perfil */}
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#f0fdfa] transition-colors border border-transparent hover:border-[#48a99e]/30"
+          className="cursor-pointer flex items-center space-x-3 p-2 rounded-lg hover:bg-[#f0fdfa] transition-colors border border-transparent hover:border-[#48a99e]/30"
         >
           <div className="relative">
             <div className="w-9 h-9 bg-[#48a99e] rounded-full flex items-center justify-center shadow-sm">
@@ -129,7 +129,7 @@ export default function UserActions() {
               <div className="p-2">
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  className="cursor-pointer w-full flex items-center gap-3 px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Cerrar sesión</span>

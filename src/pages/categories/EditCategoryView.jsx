@@ -11,116 +11,118 @@ import ConfirmModal from "../../components/ConfirmModal";
 import { Save } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { useCategories } from "../../hooks/useCategories";
+import CancelButton from "../../components/CancelButton";
+
 
 export default function EditCategoryView() {
   const navigate = useNavigate();
   const location = useLocation();
   const { categoryId } = useParams();
   const { categories, updateCategory } = useCategories();
-  
+
   // Determinar el tipo basado en el estado de navegación
   const [activeTab, setActiveTab] = useState(() => {
-    return location.state?.type === 'income' ? "ingresos" : "gastos";
+    return location.state?.type === "income" ? "ingresos" : "gastos";
   });
-  
+
   const isExpense = activeTab === "gastos";
   const typeKey = isExpense ? "expense" : "income";
-  
+
   const [formData, setFormData] = useState({
     name: "",
     color: "",
-    icon: ""
+    icon: "",
   });
-  
+
   const [touched, setTouched] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const [confirmModal, setConfirmModal] = useState({
     open: false,
     title: "",
     message: "",
-    data: null
+    data: null,
   });
-  
+
   // Cargar los datos de la categoría a editar
   useEffect(() => {
     if (categoryId) {
       const categoryList = categories[typeKey] || [];
-      const category = categoryList.find(cat => cat.id === categoryId);
-      
+      const category = categoryList.find((cat) => cat.id === categoryId);
+
       if (category) {
         setFormData({
           name: category.name,
           color: category.color,
-          icon: category.icon
+          icon: category.icon,
         });
       } else {
         // Si no se encuentra la categoría, redirigir a la vista de categorías
-        navigate('/categories');
+        navigate("/categories");
       }
     }
   }, [categoryId, categories, typeKey, navigate]);
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  
+
   const isEmpty = (field) =>
     touched[field] && (!formData[field] || formData[field].trim() === "");
-  
+
   const isFormValid = formData.name && formData.color && formData.icon;
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isFormValid) return;
-    
+
     const categoryData = {
       type: typeKey,
       name: formData.name.trim(),
       color: formData.color,
-      icon: formData.icon
+      icon: formData.icon,
     };
-    
+
     // Mostrar modal de confirmación
     setConfirmModal({
       open: true,
       title: "¿Actualizar categoría?",
       message: "¿Estás seguro de actualizar esta categoría?",
-      data: categoryData
+      data: categoryData,
     });
   };
-  
+
   const handleConfirmSubmit = async () => {
     setIsSubmitting(true);
-    
+
     try {
       // Actualizar categoría existente
       updateCategory(categoryId, typeKey, confirmModal.data);
-      
+
       // Redirigir a la vista de categorías
-      navigate('/categories', { 
-        state: { 
-          message: 'Categoría actualizada exitosamente',
-          type: 'success'
-        }
+      navigate("/categories", {
+        state: {
+          message: "Categoría actualizada exitosamente",
+          type: "success",
+        },
       });
     } catch (error) {
-      console.error('Error al actualizar la categoría:', error);
+      console.error("Error al actualizar la categoría:", error);
     } finally {
       setIsSubmitting(false);
       setConfirmModal({ open: false, title: "", message: "", data: null });
     }
   };
-  
+
   const handleCancelSubmit = () => {
     setConfirmModal({ open: false, title: "", message: "", data: null });
   };
-  
+
   const handleCancel = () => {
-    navigate('/categories');
+    navigate("/categories");
   };
-  
+
   const handleTabChange = (newTab) => {
     setActiveTab(newTab);
     // Aquí podrías actualizar el tipo de categoría si es necesario
@@ -133,7 +135,7 @@ export default function EditCategoryView() {
           <PageHeading title="Editar categoría" />
           <TabsSwitcher activeTab={activeTab} setActiveTab={handleTabChange} />
         </div>
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col space-y-6">
             <NameInput
@@ -144,14 +146,14 @@ export default function EditCategoryView() {
               label="Nombre de categoría"
               placeholder="Ej: Salud"
             />
-            
+
             <ColorInput
               value={formData.color}
               onChange={handleChange}
               onBlur={() => setTouched((prev) => ({ ...prev, color: true }))}
               error={isEmpty("color")}
             />
-            
+
             <IconInput
               value={formData.icon}
               onChange={handleChange}
@@ -159,16 +161,10 @@ export default function EditCategoryView() {
               error={isEmpty("icon")}
             />
           </div>
-          
+
           <div className="flex flex-col w-full space-y-2">
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Cancelar
-            </button>
-            
+            <CancelButton onClick={handleCancel} sizeClass="w-full mb-2" />
+
             <SubmitButton
               label="Actualizar categoría"
               Icon={Save}
@@ -185,7 +181,7 @@ export default function EditCategoryView() {
           </div>
         </form>
       </div>
-      
+
       {/* Modal de confirmación */}
       <ConfirmModal
         open={confirmModal.open}

@@ -97,16 +97,31 @@ export function useTransactions() {
     return transactions.filter(t => t.type === type);
   };
 
-  // Obtener transacciones por período (mes actual)
-  const getTransactionsByPeriod = () => {
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
+  // Obtener transacciones por período (con rango de fechas)
+  const getTransactionsByPeriod = (startDate = null, endDate = null) => {
+    // Si no se proporcionan fechas, usar el mes actual
+    if (!startDate || !endDate) {
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+      
+      return transactions.filter(t => {
+        const transactionDate = new Date(t.date);
+        return transactionDate.getMonth() === currentMonth && 
+               transactionDate.getFullYear() === currentYear;
+      });
+    }
+    
+    // Si se proporcionan fechas, filtrar por el rango
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    // Ajustar end para incluir todo el día final
+    end.setHours(23, 59, 59, 999);
     
     return transactions.filter(t => {
       const transactionDate = new Date(t.date);
-      return transactionDate.getMonth() === currentMonth && 
-             transactionDate.getFullYear() === currentYear;
+      return transactionDate >= start && transactionDate <= end;
     });
   };
 

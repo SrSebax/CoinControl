@@ -90,7 +90,7 @@ export default function SelectItemCard({
             <div className="relative group">
               <button
                 onClick={() => onEdit(item.id)}
-                className="cursor-pointer p-1.5 text-blue-600 hover:bg-blue-50 rounded-full transition"
+                className="cursor-pointer p-2 bg-red-500 text-white hover:bg-red-600 rounded-full transition shadow-sm"
                 aria-label="Editar"
               >
                 <Edit size={18} />
@@ -104,7 +104,7 @@ export default function SelectItemCard({
             <div className="relative group">
               <button
                 onClick={() => onDelete(item)}
-                className="cursor-pointer p-1.5 text-red-600 hover:bg-red-50 rounded-full transition"
+                className="cursor-pointer p-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-full transition shadow-sm"
                 aria-label="Eliminar"
               >
                 <Trash2 size={18} />

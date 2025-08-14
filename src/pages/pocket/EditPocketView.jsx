@@ -12,12 +12,13 @@ import SubmitButton from "../../components/SubmitButton";
 import ConfirmModal from "../../components/ConfirmModal";
 import { PiggyBank, Save } from "lucide-react";
 import { usePockets } from "../../hooks/usePockets";
+import CancelButton from "../../components/CancelButton";
 
 export default function EditPocketView() {
   const navigate = useNavigate();
   const { pocketId } = useParams();
   const { pockets, updatePocket } = usePockets();
-  
+
   const [formData, setFormData] = useState({
     name: "",
     icon: "",
@@ -25,7 +26,7 @@ export default function EditPocketView() {
     targetAmount: "",
     scheduledAmount: "",
     frequency: "",
-    startDate: ""
+    startDate: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -35,39 +36,41 @@ export default function EditPocketView() {
     open: false,
     title: "",
     message: "",
-    data: null
+    data: null,
   });
 
-  const frequencyOptions = [
-    "Semanal",
-    "Quincenal",
-    "Mensual"
-  ];
+  const frequencyOptions = ["Semanal", "Quincenal", "Mensual"];
 
   // Cargar los datos del bolsillo a editar (solo una vez)
   useEffect(() => {
     // Buscar el bolsillo directamente en el array de bolsillos
-    const pocket = pockets.find(p => p.id === pocketId);
-    
+    const pocket = pockets.find((p) => p.id === pocketId);
+
     if (pocket) {
       setFormData({
         name: pocket.name || "",
         icon: pocket.icon || "",
         color: pocket.color || "",
         targetAmount: pocket.targetAmount ? pocket.targetAmount.toString() : "",
-        scheduledAmount: pocket.scheduledAmount ? pocket.scheduledAmount.toString() : "",
+        scheduledAmount: pocket.scheduledAmount
+          ? pocket.scheduledAmount.toString()
+          : "",
         frequency: pocket.frequency || "",
-        startDate: pocket.startDate ? pocket.startDate.split('T')[0] : ""
+        startDate: pocket.startDate ? pocket.startDate.split("T")[0] : "",
       });
     } else {
       // Si no se encuentra el bolsillo, redirigir a la vista de bolsillos
-      navigate('/pockets');
+      navigate("/pockets");
     }
   }, [pocketId, pockets, navigate]); // Dependencias estables
 
   // Calcular la próxima fecha de ahorro y el mensaje de programación
   useEffect(() => {
-    if (!formData.scheduledAmount || !formData.frequency || !formData.startDate) {
+    if (
+      !formData.scheduledAmount ||
+      !formData.frequency ||
+      !formData.startDate
+    ) {
       setSavingMessage("");
       return;
     }
@@ -75,8 +78,8 @@ export default function EditPocketView() {
     const startDate = new Date(formData.startDate);
     let nextDate = new Date(startDate);
     let frequencyText = "";
-    
-    switch(formData.frequency.toLowerCase()) {
+
+    switch (formData.frequency.toLowerCase()) {
       case "semanal":
         nextDate.setDate(startDate.getDate() + 7);
         frequencyText = "cada semana";
@@ -93,49 +96,51 @@ export default function EditPocketView() {
         setSavingMessage("");
         return;
     }
-    
+
     // Formatear la fecha para mostrarla
-    const formattedNextDate = nextDate.toLocaleDateString('es-ES', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
+    const formattedNextDate = nextDate.toLocaleDateString("es-ES", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
     });
-    
+
     // Crear mensaje de programación
-    const amount = formData.scheduledAmount ? 
-      `$${parseInt(formData.scheduledAmount).toLocaleString('es-CO')}` : 
-      "una cantidad";
-    
-    setSavingMessage(`Tu ahorro será de ${amount} ${frequencyText}, con el próximo ahorro el ${formattedNextDate}.`);
+    const amount = formData.scheduledAmount
+      ? `$${parseInt(formData.scheduledAmount).toLocaleString("es-CO")}`
+      : "una cantidad";
+
+    setSavingMessage(
+      `Tu ahorro será de ${amount} ${frequencyText}, con el próximo ahorro el ${formattedNextDate}.`
+    );
   }, [formData.frequency, formData.startDate, formData.scheduledAmount]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
 
     // Limpiar error cuando el campo se modifica
     if (errors[name]) {
-      setErrors(prevErrors => ({
+      setErrors((prevErrors) => ({
         ...prevErrors,
-        [name]: null
+        [name]: null,
       }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = "El nombre es obligatorio";
     }
-    
+
     if (!formData.icon) {
       newErrors.icon = "Selecciona un icono";
     }
-    
+
     if (!formData.color) {
       newErrors.color = "Selecciona un color";
     }
@@ -156,49 +161,53 @@ export default function EditPocketView() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-    
+
     // Preparar los datos para la actualización
     const pocketData = {
       name: formData.name.trim(),
       icon: formData.icon,
       color: formData.color,
-      targetAmount: formData.targetAmount ? parseFloat(formData.targetAmount) : null,
-      scheduledAmount: formData.scheduledAmount ? parseFloat(formData.scheduledAmount) : null,
+      targetAmount: formData.targetAmount
+        ? parseFloat(formData.targetAmount)
+        : null,
+      scheduledAmount: formData.scheduledAmount
+        ? parseFloat(formData.scheduledAmount)
+        : null,
       frequency: formData.frequency,
-      startDate: formData.startDate
+      startDate: formData.startDate,
     };
-    
+
     // Mostrar modal de confirmación
     setConfirmModal({
       open: true,
       title: "¿Actualizar bolsillo?",
       message: "¿Estás seguro de actualizar este bolsillo?",
-      data: pocketData
+      data: pocketData,
     });
   };
 
   const handleConfirmSubmit = () => {
     setIsSubmitting(true);
-    
+
     try {
       // Actualizar bolsillo
       updatePocket(pocketId, confirmModal.data);
-      
+
       // Redirigir a la vista de bolsillos
-      navigate('/select-pocket', { 
-        state: { 
-          message: 'Bolsillo actualizado exitosamente',
-          type: 'success'
-        }
+      navigate("/select-pocket", {
+        state: {
+          message: "Bolsillo actualizado exitosamente",
+          type: "success",
+        },
       });
     } catch (error) {
-      console.error('Error al actualizar el bolsillo:', error);
+      console.error("Error al actualizar el bolsillo:", error);
     } finally {
       setIsSubmitting(false);
       setConfirmModal({ open: false, title: "", message: "", data: null });
@@ -210,19 +219,25 @@ export default function EditPocketView() {
   };
 
   const handleCancel = () => {
-    navigate('/select-pocket');
+    navigate("/select-pocket");
   };
 
   // Verificar si el formulario es válido para habilitar el botón
-  const isFormValid = formData.name && formData.icon && formData.color && 
-                     (!formData.scheduledAmount || (formData.scheduledAmount && formData.frequency && formData.startDate));
+  const isFormValid =
+    formData.name &&
+    formData.icon &&
+    formData.color &&
+    (!formData.scheduledAmount ||
+      (formData.scheduledAmount && formData.frequency && formData.startDate));
 
   return (
     <Layout>
       <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-6">
         <div className="text-center sm:text-left">
           <PageHeading title="Editar bolsillo" />
-          <p className="text-gray-600 mt-2">Modifica la información de tu bolsillo de ahorro</p>
+          <p className="text-gray-600 mt-2">
+            Modifica la información de tu bolsillo de ahorro
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6 mt-8">
@@ -260,8 +275,14 @@ export default function EditPocketView() {
           </div>
 
           {/* Sección de metas de ahorro */}
-          <div className={formData.scheduledAmount ? "border-b border-gray-200 pb-6" : ""}>
-            <h3 className="text-lg font-medium text-gray-800 mb-4">Metas de ahorro</h3>
+          <div
+            className={
+              formData.scheduledAmount ? "border-b border-gray-200 pb-6" : ""
+            }
+          >
+            <h3 className="text-lg font-medium text-gray-800 mb-4">
+              Metas de ahorro
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <AmountInput
                 label="Meta de ahorro (opcional)"
@@ -286,7 +307,9 @@ export default function EditPocketView() {
           {/* Sección de programación - solo visible si hay monto programado */}
           {formData.scheduledAmount && (
             <div>
-              <h3 className="text-lg font-medium text-gray-800 mb-4">Programación de ahorro</h3>
+              <h3 className="text-lg font-medium text-gray-800 mb-4">
+                Programación de ahorro
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <SelectInput
                   label="Frecuencia"
@@ -306,7 +329,7 @@ export default function EditPocketView() {
                   error={errors.startDate}
                 />
               </div>
-              
+
               {/* Mensaje de programación */}
               {savingMessage && (
                 <div className="mt-4 p-3 bg-blue-50 border border-blue-100 rounded-lg text-blue-800">
@@ -320,14 +343,8 @@ export default function EditPocketView() {
           )}
 
           <div className="flex flex-col w-full space-y-2">
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Cancelar
-            </button>
-            
+            <CancelButton onClick={handleCancel} sizeClass="w-full mb-2" />
+
             <SubmitButton
               label="Actualizar bolsillo"
               Icon={Save}
